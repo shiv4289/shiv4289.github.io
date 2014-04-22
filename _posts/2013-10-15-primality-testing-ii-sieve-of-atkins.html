@@ -1,0 +1,107 @@
+---
+layout: post
+title: Primality testing- II (Sieve of Atkins)
+categories:
+- Algorithms
+- Coding
+tags: []
+status: publish
+type: post
+published: true
+meta:
+  _publicize_pending: '1'
+  publicize_facebook_url: https://facebook.com/100000137867141_742691845745404
+  publicize_google_plus_url: https://plus.google.com/111959874870497087457/posts/9htmBaPZ1L3
+  publicize_linkedin_url: http://www.linkedin.com/updates?discuss=&scope=155808408&stype=M&topic=5795961054156570624&type=U&a=mBNX
+  _wpas_done_4629375: '1'
+  _publicize_done_external: a:1:{s:8:"facebook";a:1:{i:100000137867141;b:1;}}
+  _wpas_done_4629390: '1'
+  publicize_twitter_user: ShivjiJha
+  publicize_twitter_url: http://t.co/Zt3BfIGy0W
+  _wpas_done_632639: '1'
+  _wpas_done_632636: '1'
+  publicize_tumblr_url: http://blogjlt.tumblr.com.tumblr.com/post/64134761195
+  _wpas_done_4629400: '1'
+  _wpas_skip_4629375: '1'
+  _wpas_skip_4629390: '1'
+  _wpas_skip_632639: '1'
+  _wpas_skip_632636: '1'
+  _wpas_skip_4629400: '1'
+author: 
+---
+<p>In the <a title="primes (brute force and sieve of Eratosthenes)" href="http://shiv4289.wordpress.com/2013/10/15/primality-testing-i/" target="_blank">previous post on primality testing</a>, we discussed successive division (brute force method) and sieve of Eratosthenes for checking if a number is prime and generating all primes below a given number respectively. Lets move to the Sieve of Atkins algorithm today which is a modified version of sieve of Eratosthenes. Sieve of Atkins is something I wouldn't suggest for a programming contest for it is difficult to understand and remember. To be frank, there are parts to it that I don't understand why they are right but it it works pretty fast when coupled with a good implementation. Note that if implemented badly, this could perform worse! The purpose behind putting this article on the blog is to spread the word about the existence of such an algorithm and that the code can be used when needed ;) Lets check out the algorithm now. Some excerpts first:</p>
+<ol>
+<li>The algorithm treats 2, 3 and 5 as special cases and just adds them to the set of primes to start with.</li>
+<li>Like Sieve of Eratosthenes, we start with a list of numbers we want to investigate. Suppose we want to find primes &lt;=100, then we make a list for [5,1000] . As explained in (1), 2,3 and 5 are special cases and 4 is not a prime.</li>
+<li>The algorithm talks in terms of modulo-sixty remainders.</li>
+<li>All numbers with modulo-sixty remainder 1, 13, 17, 29, 37, 41, 49, or 53 have a modulo-four remainder of 1. These numbers are prime <a title="If and only if" href="http://en.wikipedia.org/wiki/If_and_only_if">if and only if</a> the number of solutions to 4<i>x</i><sup>2</sup> + <i>y</i><sup>2</sup> = <i>n</i> is odd and the number is squarefree. A square free integer is one which is not divisible by any perfect square other than 1.</li>
+<li>All numbers with modulo-sixty remainder 7, 19, 31, or 43 have a modulo-six remainder of 1. These numbers are prime if and only if the number of solutions to 3<i>x</i><sup>2</sup> + <i>y</i><sup>2</sup> = <i>n</i> is odd and the number is squarefree.</li>
+<li>All numbers with modulo-sixty remainder 11, 23, 47, or 59 have a modulo-twelve remainder of 11. These numbers are prime if and only if the number of solutions to 3<i>x</i><sup>2</sup> − <i>y</i><sup>2</sup> = <i>n</i> is odd and the number is squarefree.</li>
+</ol>
+<p>The points (4-6) are not intuitive and hence this algorithm is a little difficult to understand. But, if you are interested, check out the proofs on <a title="Atkin's paper titled  Prime sieves using binary quadratic forms" href="http://www.ams.org/mcom/2004-73-246/S0025-5718-03-01501-1/S0025-5718-03-01501-1.pdf" target="_blank">Atkin's paper</a>.  With these points in mind now, lets look at the following pseudocode from the Wikipedia article:</p>
+<pre>// arbitrary search limit
+limit ← 1000000         
+
+// initialize the sieve
+for i in [5, limit]: is_prime(i) ← false
+
+// put in candidate primes: 
+// integers which have an odd number of
+// representations by certain quadratic forms
+for (x, y) in [1, √limit] × [1, √limit]:
+    n ← 4x²+y²
+    if (n ≤ limit) and (n mod 12 = 1 or n mod 12 = 5):
+        is_prime(n) ← ¬is_prime(n)
+    n ← 3x²+y²
+    if (n ≤ limit) and (n mod 12 = 7):
+        is_prime(n) ← ¬is_prime(n)
+    n ← 3x²-y²
+    if (x &gt; y) and (n ≤ limit) and (n mod 12 = 11):
+        is_prime(n) ← ¬is_prime(n)
+
+// eliminate composites by sieving
+for n in [5, √limit]:
+    if is_prime(n):
+        // n is prime, omit multiples of its square; this is
+        // sufficient because composites which managed to get
+        // on the list cannot be square-free
+        is_prime(k) ← false, k ∈ {n², 2n², 3n², ..., limit} 
+
+print 2, 3
+for n in [5, limit]:
+    if is_prime(n): print n</pre>
+<p>And finally lets convert this easy to understand algorithm into a python code:</p>
+<p>[sourcecode language="Python"]<br />
+#!/usr/bin/python2.7 -tt</p>
+<p>import sys<br />
+from math import sqrt, ceil, pow</p>
+<p>def primes_below(limit): #sieve of Atkins<br />
+  sqroot= int(ceil(sqrt(limit)))<br />
+  is_prime=[False]*limit<br />
+  primes = [2,3]</p>
+<p>  for x in xrange(sqroot+1):<br />
+    for y in xrange(sqroot+1):<br />
+      # n = 4*i^2 + j^2<br />
+      n = 4*int(pow(x, 2)) + int(pow(y,2))<br />
+      if n &lt;= limit and (n % 12 == 1 or n % 12 == 5):<br />
+        is_prime[n]= not is_prime[n]<br />
+      # n = 3*i^2 + j^2<br />
+      n = 3*int(pow(x, 2)) + int(pow(y,2))<br />
+      if n &lt;= limit and n % 12 == 7:<br />
+        is_prime[n]= not is_prime[n]<br />
+      # n = 3*i^2 - j^2<br />
+      n = 3*int(pow(x, 2)) - int(pow(y,2))<br />
+      if n &lt;= limit and x &gt; y and n % 12 == 11:<br />
+        is_prime[n]= not is_prime[n]</p>
+<p>  for x in range(5, limit, 2):<br />
+    if(is_prime[x] == True):<br />
+      for y in xrange(x*x, limit, x):<br />
+        is_prime[y]= False<br />
+      primes.append(x);<br />
+  print primes</p>
+<p>def main():<br />
+  primes_below(100)</p>
+<p>if __name__=='__main__':<br />
+  main()<br />
+[/sourcecode]</p>
+<p>The C++ code for the algorithm can be found <a title="c code for sieve of Atkins" href="http://dl.dropboxusercontent.com/u/29023244/atkin.cpp" target="_blank">here</a>. Enjoy!</p>

@@ -1,0 +1,279 @@
+---
+layout: post
+title: Edit distance - implementation
+categories:
+- Algorithms
+- Coding
+tags: []
+status: publish
+type: post
+published: true
+meta:
+  _wpas_done_yup: '1'
+  publicize_results: a:2:{s:7:"twitter";a:1:{i:501487031;a:2:{s:7:"user_id";s:9:"ShivjiJha";s:7:"post_id";s:18:"176779387109253120";}}s:2:"fb";a:1:{i:100000137867141;a:2:{s:7:"user_id";s:15:"100000137867141";s:7:"post_id";s:15:"399337856747473";}}}
+  _wpas_done_twitter: '1'
+  _wpas_done_fb: '1'
+  _wpas_done_linkedin: '1'
+author: 
+---
+<p><span style="text-decoration:underline;"><strong>The Problem Statement:</strong></span></p>
+<p>Edit Distance (also called <strong>Levenshtein distance</strong>)is a classic Dynamic Programming Problem. You are given a source string (say, of length m)and a target string (say of length n) plus <em><strong>a series of allowed transformations</strong> <strong>and their corresponding costs</strong></em>. You are required to find the <em><strong>minimum cost required to convert the source string into the target string using only the given transformations</strong></em>. Let us take a temporary string "temp" to illustrate things clearly. Initially we will keep our "temp" string empty and at the end of the algorithm we will have "temp" containing the same contents as the target string. Lets use i and j as the indices into the source string and the "temp" string. Set i=j=0 initially. The allowed transformations are generally:</p>
+<ol>
+<li><em><strong>insert</strong></em> - add a character(say 'c') to the "temp" string ie.. put temp[j]=c and increment j.</li>
+<li><em><strong>replace</strong></em> - replacing a character of source string by any another character (say 'c') ie.. we will insert c into "temp" string and increment both i and j. Note that we only incremented j in (1).</li>
+<li><em><strong>delete</strong></em> - deleting a character from source string ie.. increment i only.</li>
+<li><em><strong>copy</strong></em> - copy a character from source to "temp"(generally involves no cost).</li>
+</ol>
+<p>Cormen's text (no 1 <a title="c" href="http://shiv4289.wordpress.com/references/">here</a>) also mentions this problem in its exercises but he has given two more transformations called</p>
+<ul>
+<li><em><strong>twiddle</strong></em> - exchange next two characters ie.. copy both but they appear in opposite order in the target string.</li>
+<li><em><strong>kill</strong></em> - kill the remainder of source string ie set i=m-1.</li>
+</ul>
+<p>Lets assume that the costs for copy, insert, replace and delete are C,I,R and D respectively.  Also, for simplicity we will leave out the "twiddle" and "kill" operations. If you want to consider these two operations, you may refer the Instructors Manual by Thomas H. Cormen, Clara Lee and Erica Lin to accompany the cormen's text which gives the pseudocode involving "twiddle" and "kill" functions as well. Lets now look at a few examples to understand the problem statement more clearly.</p>
+<p><span style="text-decoration:underline;"><strong>Examples:</strong></span></p>
+<ol>
+<li>Let source string="at" and target string="mat". Here we can simply insert "m" at the beginning of "temp"and then copy 'a' and 't' from source to "temp". So the minimum cost required= I+(2*C)</li>
+<li>let source="cat" , target = "mat" then cost= R+(2*C),</li>
+<li>let source="cat" , target = "at" then cost= D+(2*C),</li>
+<li>let source="cat" , target = "cat" then cost= 0(zero),</li>
+<li>let source="cat" , target = empty string, then cost= 3*I ie.. insert all 3 characters.</li>
+</ol>
+<p>As is generally the case , lets assume that copy operation requires no cost.Lets now take a slightly tougher example(from<a title="w" href="http://en.wikipedia.org/wiki/Levenshtein_distance"> wikipedia</a> article):</p>
+<p>Suppose, source= "kitten" and target="sitting",there is no way to do it with fewer than three edits:</p>
+<ul>
+<li>kitten → sitten (replace 'k' by 's')</li>
+<li>sitten → sittin (replace 'e' by 'i')</li>
+<li>sittin → sitting (insert of 'g' at the end).</li>
+</ul>
+<p><span style="text-decoration:underline;"><strong>Recursive Code:</strong></span></p>
+<p>Below is a recursive code to find the edit distance of two given strings. You may try different inputs on the <a href="http://ideone.com/W6sf5">ideone link for my recursive solution.</a></p>
+<p>[sourcecode language="cpp"]</p>
+<p>#include&lt;stdio.h&gt;<br />
+#include&lt;stdlib.h&gt;<br />
+#include&lt;string.h&gt;</p>
+<p>#define IC 1 /*cost to insert*/<br />
+#define RC 1 /*cost to replace*/<br />
+#define DC 1 /*cost to delete*/</p>
+<p>int minimum(int a, int b, int c)<br />
+{<br />
+    int min = c;</p>
+<p>    if( a &lt; b )<br />
+    {<br />
+        if( a &lt; c )<br />
+        {<br />
+            min = a;<br />
+        }<br />
+    }<br />
+    else<br />
+    {<br />
+        if( b &lt; c )<br />
+        {<br />
+            min = b;<br />
+        }<br />
+    }</p>
+<p>    return min;<br />
+}</p>
+<p>/*<br />
+     red- recursive edit distance</p>
+<p>*/<br />
+int red(char *x, char *y)<br />
+{<br />
+    int d,e,f;</p>
+<p>    /* Base cases */</p>
+<p>    if(*x==0)return strlen(y);<br />
+    if(*y== 0)return strlen(x);</p>
+<p>    /* Recurse */</p>
+<p>    if(*x==*y)<br />
+         d=red(x+1,y+1);<br />
+    else<br />
+         d=RC+red(x+1,y+1); /*replace*/<br />
+    e=IC+red(x,y+1); /*insert*/<br />
+    f=DC+red(x+1,y); /*delete*/</p>
+<p>    return minimum(d,e,f);<br />
+}</p>
+<p>int main()<br />
+{<br />
+    char source[]=&quot;kitten&quot;;<br />
+    char target[]=&quot;sitting&quot;;</p>
+<p>    printf(&quot;Minimum cost to convert %s into %s is %d\n&quot;,source,target,red(source,target));</p>
+<p>    return 0;<br />
+}<br />
+[/sourcecode]</p>
+<p><span style="text-decoration:underline;"><strong>The DP solution:</strong></span></p>
+<p>Here is the <a title="b" href="http://ideone.com/kgsG1">idoene link for the DP code</a>. Play with it if you find the DP code difficult to understand !!</p>
+<p>[sourcecode language="cpp"]</p>
+<p>#include&lt;stdio.h&gt;<br />
+#include&lt;stdlib.h&gt;<br />
+#include&lt;string.h&gt;</p>
+<p>#define IC 1 /*cost to insert*/<br />
+#define RC 1 /*cost to replace*/<br />
+#define DC 1 /*cost to delete*/</p>
+<p>int minimum(int a, int b, int c)<br />
+{<br />
+    int min = c;</p>
+<p>    if( a &lt; b )<br />
+    {<br />
+        if( a &lt; c )<br />
+        {<br />
+            min = a;<br />
+        }<br />
+    }<br />
+    else<br />
+    {<br />
+        if( b &lt; c )<br />
+        {<br />
+            min = b;<br />
+        }<br />
+    }</p>
+<p>    return min;<br />
+}</p>
+<p>int edit_distance(char* s1, char* s2)<br />
+{<br />
+        int d;<br />
+        int m = strlen(s1);<br />
+        int n = strlen(s2);<br />
+        int dp[m+1][n+1];<br />
+        for (int i = 0; i &lt;= m; i++) {<br />
+                dp[i][0] = i;<br />
+        }<br />
+        for (int j = 0; j &lt;= n; j++) {<br />
+                dp[0][j] = j;<br />
+        }</p>
+<p>        for (int i = 1; i &lt;= m; i++) {<br />
+                for (int j = 1; j &lt;= n; j++) {<br />
+                        if (s1[i-1] == s2[j-1])<br />
+                             d = 0;<br />
+                        else<br />
+                             d = RC;<br />
+                        dp[i][j] = minimum(dp[i-1][j-1] + d,    /*replace*/<br />
+                                          dp[i-1][j]+IC,         /*insert*/<br />
+                                          dp[i][j-1]+DC);        /*delete*/<br />
+                }<br />
+        }</p>
+<p>        return dp[m][n];<br />
+}</p>
+<p>int main()<br />
+{<br />
+    char source[]=&quot;kitten&quot;;<br />
+    char target[]=&quot;sitting&quot;;</p>
+<p>    printf(&quot;Minimum cost to convert %s into %s is %d\n&quot;,source,target,edit_distance(source,target));</p>
+<p>    return 0;<br />
+}</p>
+<p>[/sourcecode]</p>
+<p>Try understanding how the DP matrix will look like. For the above <a title="t" href="http://en.wikipedia.org/wiki/Levenshtein_distance">wiki</a> example, here is the DP matrix:</p>
+<table class="aligncenter">
+<tbody>
+<tr>
+<td></td>
+<th>k</th>
+<th>i</th>
+<th>t</th>
+<th>t</th>
+<th>e</th>
+<th>n</th>
+</tr>
+<tr>
+<td></td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+</tr>
+<tr>
+<th>s</th>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+</tr>
+<tr>
+<th>i</th>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+</tr>
+<tr>
+<th>t</th>
+<td>3</td>
+<td>3</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<th>t</th>
+<td>4</td>
+<td>4</td>
+<td>3</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr>
+<th>i</th>
+<td>5</td>
+<td>5</td>
+<td>4</td>
+<td>3</td>
+<td>2</td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr>
+<th>n</th>
+<td>6</td>
+<td>6</td>
+<td>5</td>
+<td>4</td>
+<td>3</td>
+<td>3</td>
+<td>2</td>
+</tr>
+<tr>
+<th>g</th>
+<td>7</td>
+<td>7</td>
+<td>6</td>
+<td>5</td>
+<td>4</td>
+<td>4</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+<p>You can also try different inputs to see what the result could be <a title="g" href="http://www.csse.monash.edu.au/~lloyd/tildeAlgDS/Dynamic/Edit/">here</a>. <em><strong>Both time and space complexity of DP solution is O(nm)</strong></em>. The sequence of operations performed can also be printed but for that we need to use an additional O(mn) space which will save the operation performed along the way and the sequence can be found recursively moving backwards. See the Instructors Manual by Thomas H. Cormen, Clara Lee and Erica Lin to accompany the cormen's text if you find any difficulty. Note that the <em><strong>space requirement can be improved to O(n)</strong></em>, as in each iteration only requires element from the current and previous row but in this case retracing the path to find the operations used and their order is not possible. Also note that there may be more than one of these paths and the above solution chooses one of them.</p>
+<p><span style="text-decoration:underline;"><strong>Modifications:</strong></span></p>
+<ol>
+<li>Substring Matching</li>
+<li><a title="k" href="http://shiv4289.wordpress.com/2012/02/07/lcs-and-lis/">LCS</a> - make the cost of replacement greater than that of an insertion plus a deletion.</li>
+<li>Maximum Monotone Subsequence</li>
+</ol>
+<div>For an explaination on what modifications are needeed in each section refer <em><strong>Programming Challenges by Steven Skiena( </strong></em>no 3 <a href="http://shiv4289.wordpress.com/references/">here</a><strong></strong><em><strong>).</strong></em></div>
+<div></div>
+<div></div>
+<div><span style="text-decoration:underline;"><strong>References: </strong></span></div>
+<div>Here are a few materials that discuss the algo/implementation:</div>
+<div>
+<ul>
+<li><a title="y" href="http://en.wikipedia.org/wiki/Levenshtein_distance">Wikipedia article for edit distance</a>,</li>
+<li><a title="h" href="http://www.algorithmist.com/index.php/Edit_Distance">Algorithmist's article</a>,</li>
+<li><a title="n" href="http://people.cs.umass.edu/~mccallum/courses/cl2006/lect4-stredit.pdf">Lecture Notes</a> by <a title="v" href="http://people.cs.umass.edu/~mccallum/">Andrew McCallum</a></li>
+<li><a title="h" href="http://www.geeksforgeeks.org/archives/13178">solution</a> by geeksforgeeks.org</li>
+<li><a title="p" href="http://nlp.stanford.edu/IR-book/html/htmledition/edit-distance-1.html">edit distance article</a> at stanford.edu</li>
+</ul>
+</div>
+<p><strong><span style="text-decoration:underline;"><br />
+</span></strong></p>

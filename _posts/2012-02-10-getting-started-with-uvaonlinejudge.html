@@ -1,0 +1,82 @@
+---
+layout: post
+title: Getting Started With uvaonlinejudge ...
+categories:
+- Coding
+tags: []
+status: publish
+type: post
+published: true
+meta:
+  _wpas_mess: Getting Started With uvaonlinejudge ...
+  publicize_results: a:1:{s:2:"fb";a:1:{i:100000137867141;a:2:{s:7:"user_id";s:15:"100000137867141";s:7:"post_id";s:15:"381259891888603";}}}
+  _wpas_done_fb: '1'
+  _wpas_skip_linkedin: '1'
+author: 
+---
+<p><strong>What is uva online judge after all ???</strong></p>
+<p>According to<strong> wikipedia , </strong><a title="h" href="http://uva.onlinejudge.org/">UVa Online Judge</a> is an online automated judge for programming problems . The system can compile and execute codes and test them with pre-constructed data. Submitted code may be run with restrictions, including time limit, memory limit, security restriction and so on. The output of the code will be captured by the system, and compared with the standard output. It will then inform you whether your solutions are correct (AC) , or faulty and in the latter case it will also tell you what the problem was viz..</p>
+<ul>
+<li>Your code could not be compiled on their compiler ,</li>
+<li>Your code did <strong>not</strong> produce the correct output <strong>for</strong> <strong>all</strong> the test cases they tried (WA) ,</li>
+<li>Presentation error - you did not display the output the way they expect you to  etc.....</li>
+</ul>
+<p>The registration is open to all users (and free of cost too :D).  A user may submit a solution in <a title="C programming language" href="http://en.wikipedia.org/wiki/C_programming_language">C</a>, <a title="C++" href="http://en.wikipedia.org/wiki/C%2B%2B">C++</a>, <a title="Java (programming language)" href="http://en.wikipedia.org/wiki/Java_%28programming_language%29">Java</a> or <a title="Pascal (programming language)" href="http://en.wikipedia.org/wiki/Pascal_%28programming_language%29">Pascal</a>.  You just have to get yourself registered at the site .</p>
+<p>Solving a problem on the UVa Online Judge requires the following:</p>
+<ul>
+<li>Read and understand the problem statement .</li>
+<li>Devise an algorithm (may vary from a very simple one to an extremely tougher one) to solve the problem .</li>
+<li>Implement the algorithm in C, C++, Pascal or Java .</li>
+<li>Finally, if you are convinced of its correctness, upload your code to have it judged.</li>
+</ul>
+<p>The judging is automated (they use benchmark input and output files), so you can typically expect a response within a few seconds. After all the theory above (we have had enough of it :P) , lets try and solve a problem at the <a title="n" href="http://uva.onlinejudge.org/">uva site</a>.</p>
+<p><strong>Getting started : A step-by-step approach</strong></p>
+<p>Lets get started with an easy question  :) . I have selected the  problem at the uva  called <a title="j" href="http://uva.onlinejudge.org/index.php?option=onlinejudge&amp;Itemid=8&amp;page=show_problem&amp;problem=1012">Back to High School Physics</a> . It is indeed an easy problem . Go through the question , use sample input and sample output section to see what they really need . Once you get a feeling of what to do , try finding out the formula (the so called "algorithm" for this problem) . Think hard if you dont get it  ,</p>
+<ul>
+<li>visit <a title="n" href="http://www.questtosolve.com/browse.php">this</a> link .</li>
+<li>click on volume 100 (since it is question no <strong>100</strong>71 on the uva site)</li>
+<li>Scroll down and you will get a hint to the problem .</li>
+</ul>
+<p>Alternatively ,  search google for  <strong>10071 - Back to High School Physics</strong> . Click on a link from the algorithmist's site . You will reach <a title="l" href="http://www.algorithmist.com/index.php/UVa_10071">here</a> . You could find some clues here too . But please try yourself before you go onto look at the hints using one of the two methods  because thats the whole motive behind starting with uva .  By now you are ready to dive into your compiler and code ,so do it !!! . You may also use <a href="http://www.ideone.com">ideone</a> .  Its a really good place to try different input/ outputs and check if your code is error-free . Let me post the solution for this question to show you a sample solution :</p>
+<p>[sourcecode language="cpp"]</p>
+<p>#include&lt;stdio.h&gt;<br />
+int main()<br />
+{</p>
+<p>     long int v,t,s;</p>
+<p>     while(scanf(&quot;%ld%ld&quot;,&amp;v,&amp;t)==2){</p>
+<p>          s=v*t*2;</p>
+<p>          printf(&quot;%d\n&quot;,s);</p>
+<p>    }<br />
+    return 0;<br />
+}<br />
+[/sourcecode]</p>
+<p>Log in to the uva website  . Go to <strong>Quick submit</strong> on the left . Enter question number on uva site (10007 here) , choose a language (click on C for above sample code) , copy-paste your code here (you may browse it as well :) ) and <strong>submit</strong> your code Congratulations !!!! you have now submitted a solution at the uva site (if you get AC- accepted) . You can check the status of your submission by selecting the “My Submissions” link on the left side of the page. The “Verdict” heading will tell you if it was solved or if there was a problem (<em>e.g.</em> wrong answer, ran too long, crashed, too much memory was used, compile error, etc).</p>
+<p>Now go ahead and solve some more problems  !!!</p>
+<p><strong> Next Problem to Solve</strong> :</p>
+<p>As there are large number of problems to be solved, you have to select problems. The best way according to me is  <a href="http://felix-halim.net/uva/hunting.php">Felix Halim’s website</a>. Just punch in your username and see the miracle. Bookmark the page, at least that’s what I did :D .</p>
+<p align="justify">Use <a href="http://felix-halim.net/uva/hunting.php">Felix Halim</a> for figuring out what problem will be easiest to find:</p>
+<p align="justify"><a href="http://aansu.files.wordpress.com/2011/06/image6.png"><img title="image" src="http://aansu.files.wordpress.com/2011/06/image_thumb6.png?w=490&amp;h=308" alt="image" width="490" height="308" border="0" /></a></p>
+<p align="justify">Or you can also get Topic wise problems:</p>
+<p align="justify"><a href="http://aansu.files.wordpress.com/2011/06/image7.png"><img title="image" src="http://aansu.files.wordpress.com/2011/06/image_thumb7.png?w=490&amp;h=308" alt="image" width="490" height="308" border="0" /></a></p>
+<p align="justify">Another word of advice, the solutions for <a href="http://uva.onlinejudge.org/">UVA</a> are available abundantly on the net. Please do not copy, as this is not a competition!</p>
+<ul>
+<li>
+<div align="justify">First try to solve a problem by your self.</div>
+</li>
+<li>
+<div align="justify">If you keep on getting WA’s, Try <a href="http://aansu.wordpress.com/2011/06/03/solving-uva/www.uvatoolkit.com/problemssolve.php">UVA Toolkit</a> to check for critical input.</div>
+</li>
+<li>
+<div align="justify">If you still get WA’s, try reading on <a href="http://online-judge.uva.es/board/">UVA forum</a> and you might get critical test cases there!</div>
+</li>
+<li>
+<div align="justify">Still a WA then read a solution, but definitely write your own code!</div>
+</li>
+</ul>
+<p align="justify">AC’s are heavenly, work for them! Have fun…Enjoy coding!!!</p>
+<p align="justify"><strong>If you use google-chrome</strong> :</p>
+<p align="justify">Sometimes , The <a href="http://uva.onlinejudge.org/">site</a> wont open and it will  show a redirect loop. It is solved by removing the cookie onlinejudge.org. It can be removed in the following way. Open options-&gt;under the hood:</p>
+<p align="justify"><a href="http://aansu.files.wordpress.com/2011/06/image4.png"><img title="image" src="http://aansu.files.wordpress.com/2011/06/image_thumb4.png?w=460&amp;h=289" alt="image" width="460" height="289" border="0" /></a></p>
+<p align="justify">Click on “content settings”, and in “cookies” sections click on “all cookies and site data”.</p>
+<p align="justify"><a href="http://aansu.files.wordpress.com/2011/06/image5.png"><img title="image" src="http://aansu.files.wordpress.com/2011/06/image_thumb5.png?w=457&amp;h=287" alt="image" width="457" height="287" border="0" /></a><br />
+now search for <strong>onlinejudge.org</strong> cookie and delete it..Tada problem solved!( P.S. the screenshots are from this <a href="http://aansu.wordpress.com/2011/06/03/solving-uva/">page</a> ).</p>

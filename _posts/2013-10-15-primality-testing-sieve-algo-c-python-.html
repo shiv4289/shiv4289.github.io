@@ -1,0 +1,30 @@
+---
+layout: post
+title: Primality testing- Sieve algo (C/python)
+categories: []
+tags: []
+status: draft
+type: post
+published: false
+meta: {}
+author: 
+---
+<pre><code>If you are into algorithms, you would realize that Primality testing is a very important topic. In naive terms Primality testing is finding if a number is prime or not. Lets discuss a few tricks for the same.
+
+<span style="text-decoration:underline;"><strong>NAIVE ALGORITHM:</strong></span>
+
+
+def primes_sieve2(limit):
+    a = [True] * limit                          # Initialize the primality list
+    a[0] = a[1] = False
+
+    for (i, isprime) in enumerate(a):
+        if isprime:
+            yield i
+            for n in xrange(i*i, limit, i):     # Mark factors non-prime
+                a[n] = False</code>
+
+Sieve of Atins
+C code- <a href="http://www.programminglogic.com/the-sieve-of-eratosthenes-implemented-in-c/">http://www.programminglogic.com/the-sieve-of-eratosthenes-implemented-in-c/</a>
+<a href="http://primes.utm.edu/glossary/xpage/sieveoferatosthenes.html">http://primes.utm.edu/glossary/xpage/sieveoferatosthenes.html</a>
+<a href="http://www.cut-the-knot.org/Curriculum/Arithmetic/Eratosthenes.shtml">http://www.cut-the-knot.org/Curriculum/Arithmetic/Eratosthenes.shtml</a></pre>

@@ -1,0 +1,121 @@
+---
+layout: post
+title: C/C++ - Variable number of arguments to a function
+categories:
+- Coding
+- Some Beautiful Codes
+tags: []
+status: publish
+type: post
+published: true
+meta:
+  _publicize_pending: '1'
+  _wpas_done_632636: '1'
+  publicize_reach: a:2:{s:7:"twitter";a:1:{i:632639;i:35;}s:2:"wp";a:1:{i:0;i:5;}}
+  publicize_twitter_user: ShivjiJha
+  _wpas_done_632639: '1'
+  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:501487031;b:1;}}
+  _wpas_mess: C/C++ - Variable number of arguments to a function
+  _wpas_skip_632639: '1'
+  _wpas_skip_632636: '1'
+  _oembed_19d250cc234da840330e161efb102995: ! '{{unknown}}'
+  _oembed_5f6f92e3de4a36fdbce203fe5474ff3c: ! '{{unknown}}'
+  _oembed_c500418d4fdc1d984e47a260cbe49391: ! '{{unknown}}'
+  _oembed_28a462fb98f38833bb5b69a54f70ff53: ! '{{unknown}}'
+  _oembed_d8119f2adc02aa0c42376bd9bda5e1bd: ! '{{unknown}}'
+  _oembed_64d703d3a69c0768189f03bbf6abdd57: ! '{{unknown}}'
+  _oembed_7c4a7fd43698c218bd8d79369c2263a2: ! '{{unknown}}'
+  _oembed_84db5f1f3ffed0eafae33e2f60d9d390: ! '{{unknown}}'
+author: 
+---
+<p>Ever wondered how printf() in C would be implemented ? If you are a C-lover, I guess you would have, for its a function that looks pretty different from the other library functions, consumes tons of options and its very powerful. If you are not a C-fan and do not know much of it, you may want to have a look <a title="printf article on cplusplus.com" href="http://www.cplusplus.com/reference/cstdio/printf/">here</a> . Well, one of the great flexibility of printf() comes from the fact that it can consume variable number of arguments. If you are scratching your head about how it does that, hold on,  you will know it in a minute. That is what this post aims at :) . Lets look at some examples to understand what 'variable number of arguments' means.</p>
+<p>[sourcecode language="c"]</p>
+<p>#include&lt;stdio.h&gt;<br />
+int main()<br />
+{<br />
+   char * string = &quot;with&quot;;<br />
+   printf(&quot;printf with 1 arguement\n&quot;);<br />
+   printf(&quot;Printf with %d arguements\n&quot;, 2);<br />
+   printf(&quot;Printf %s %d arguements&quot;, string, 3);<br />
+   return 0;<br />
+}<br />
+[/sourcecode]</p>
+<p>Note that the first version takes one argument, the second version takes two arguments and the third takes three. Have you ever written a function definition in C that can be invoked with any number of arguements 1...N ? If not, lets write one. But on the way we need to learn a couple of things as ingredients to it. We need to know of four simple things. The definitions have been taken from <a title="2" href="http://www.cplusplus.com/reference/cstdarg/va_list/?kw=va_list">cplusplus.com</a>. If you dont understand what they mean, you may first want to see how they are used ( see the code below) and believe me, its very simple to understand them from the usage.</p>
+<ol>
+<li>va_list:  Type to hold information about variable arguments.<br />
+<section id="description" style="display:inline!important;"></section>
+<p> Objects of this type can only be used as argument for the  <a href="http://www.cplusplus.com/va_start">va_start</a>,  <a href="http://www.cplusplus.com/va_arg">va_arg</a>,  <a href="http://www.cplusplus.com/va_end">va_end</a> and  <a href="http://www.cplusplus.com/va_copy">va_copy</a> macros, or functions that use them, like the <i>variable argument </i>functions in <a href="http://www.cplusplus.com/%3Ccstdio%3E">&lt;cstdio&gt;</a>  (<a href="http://www.cplusplus.com/vprintf">vprintf</a>,  <a href="http://www.cplusplus.com/vscanf">vscanf</a>,  <a href="http://www.cplusplus.com/vsnprintf">vsnprintf</a>, <a href="http://www.cplusplus.com/vsprintf">vsprintf</a> and  <a href="http://www.cplusplus.com/vsscanf">vsscanf</a>).</li>
+<li>
+<pre>void va_start (va_list ap, paramN)</pre>
+<p>Initialize a variable argument list. Initializes <var>ap</var> to point to the first unnamed argument. It retrieve the additional arguments after parameter <var>paramN</var>. A function that invokes va_start(), should also invoke va_end() before it returns.</li>
+<li>
+<pre>type va_arg (va_list ap, type)</pre>
+<div id="I_description">Retrieve next argument. This macro expands to an expression of type <strong><var>type</var></strong> with the value of the <strong><i>current argument</i></strong> in the <i>variable arguments list </i>identified by <var>ap</var>.</div>
+</li>
+<li>
+<pre>void va_end (va_list ap);</pre>
+<div id="I_description">Each invocation of <b>va_start</b>() must be matched by a corresponding invocation of <b>va_end</b>() in the same function.. It performs the appropriate actions to facilitate a normal return by a function that has used the va_list object <strong><var>ap</var></strong> .</div>
+</li>
+</ol>
+<p>Pheww thats a lot of technical Jargon !! Lets revert to some simpler words now. In short, you need to first define a list of type va_list by saying something like.. va_list args. Next, invoke a call to va_start() to indicate where the variable list of arguments  starts from, extract each argument from the variable list (args in our case) using va_arg() and finally dont forget calling va_end().</p>
+<p>Note that apart from va_ag(), a va_list object (named <strong>ap</strong> in declarations below ) can also be consumed by versions of printf() that are preceded by 'v', for example:</p>
+<ol>
+<li><span style="font-family:Consolas, Monaco, monospace;font-size:12px;line-height:18px;">int vprintf ( const char * format, va_list ap ); - Prints formatted data from variable argument list to stdout,</span></li>
+<li><span style="font-family:Consolas, Monaco, monospace;font-size:12px;line-height:18px;">int vfprintf ( FILE * stream, const char * format, va_list ap ); - Writes formatted data from variable argument list to <strong>stream</strong> and</span></li>
+<li><span style="font-family:Consolas, Monaco, monospace;font-size:12px;line-height:18px;">int vsprintf (char * s, const char * format, va_list ap ); - </span><span style="font-family:Consolas, Monaco, monospace;font-size:12px;line-height:18px;">Writes formatted data from variable argument list to string <strong>s</strong>.</span></li>
+</ol>
+<p>Lets look at an example that uses the a va_arg(). For the above mentioned printf versions, you can find a C program for each of the 3 functions listed above in the links in the "References" section  (#2, #3, #4 respectively) at the end of this post.</p>
+<p>[sourcecode language="c"]<br />
+#include&lt;stdio.h&gt;<br />
+#include &lt;stdarg.h&gt;</p>
+<p>/* The sum() function can accept variable number of arguments.<br />
+   In the function declaration ... means that the number and<br />
+   type of the arguments may vary. The marker ... can only<br />
+   appear at the end.<br />
+*/<br />
+int sum(int num_of_arguments, ... )<br />
+{<br />
+  /* A list to store the aruements. In example, this may contain<br />
+    1,2,3 and 4 elements on successive calls from main()<br />
+  */<br />
+  va_list args;<br />
+  int sum= 0, i;</p>
+<p>  /* Directing the va_list args initialized above to start storing<br />
+     all parameters folloowing the first parameter 'num_of_arguments'<br />
+  */<br />
+  va_start (args, num_of_arguments );</p>
+<p>  /* Loop until all parameters are seen. */<br />
+  for (i= 0; i&lt; num_of_arguments; i++ )<br />
+  /* Extract the next value in argument list and add it to sum. */<br />
+  sum += va_arg (args,int);</p>
+<p>  /* Signal that we are done with our usage of the list */<br />
+  va_end (args);</p>
+<p>  return sum;  /* Returns the calculated sum.*/<br />
+}<br />
+int main()<br />
+{<br />
+  int result;</p>
+<p>  result=sum (1,1);<br />
+  printf(&quot;result of sum() with 2 arguement: %d \n&quot;, result);</p>
+<p>  result=sum (2,1,2);<br />
+  printf(&quot;result of sum() with 3 arguement: %d \n&quot;, result);</p>
+<p>  result=sum (3,1,2,3);<br />
+  printf(&quot;result of sum() with 4 arguement: %d \n&quot;, result);</p>
+<p>  result=sum (4,1,2,3,4);<br />
+  printf(&quot;result of sum() with 5 arguement: %d \n&quot;, result);</p>
+<p>  return 0;<br />
+}<br />
+[/sourcecode]</p>
+<p>Time to see what the function outputs. Here you go:</p>
+<pre>result of sum() with 2 arguement: 1 
+result of sum() with 3 arguement: 3 
+result of sum() with 4 arguement: 6 
+result of sum() with 5 arguement: 10</pre>
+<p>And as always play with the above  <a title="3" href="http://ideone.com/wgcgzn">code on ideone</a>. Change a few things here and there and see how it works. Done with this? Lets try and implement our own version of printf().</p>
+<p>References:</p>
+<ol>
+<li>Linux man page: <a href="http://linux.die.net/man/3/va_arg">http://linux.die.net/man/3/va_arg</a></li>
+<li><a href="http://www.cplusplus.com/reference/cstdio/vprintf/">http://www.cplusplus.com/reference/cstdio/vprintf/</a></li>
+<li><a href="http://www.cplusplus.com/reference/cstdio/vfprintf/">http://www.cplusplus.com/reference/cstdio/vfprintf/</a></li>
+<li><a href="http://www.cplusplus.com/reference/cstdio/vsprintf/">http://www.cplusplus.com/reference/cstdio/vsprintf/</a></li>
+</ol>

@@ -1,0 +1,101 @@
+---
+layout: post
+title: Backtracking-I (Primer)
+categories:
+- Algorithms
+- Coding
+tags:
+- backtracking
+status: publish
+type: post
+published: true
+meta:
+  _publicize_pending: '1'
+  publicize_facebook_url: https://facebook.com/764589616888960
+  publicize_google_plus_url: https://plus.google.com/111959874870497087457/posts/LiXPunJQGhS
+  _wpas_done_4629375: '1'
+  _publicize_done_external: a:1:{s:8:"facebook";a:1:{i:100000137867141;b:1;}}
+  _wpas_done_4629390: '1'
+  publicize_twitter_user: ShivjiJha
+  publicize_twitter_url: http://t.co/6rHosTdXsv
+  _wpas_done_632639: '1'
+  publicize_linkedin_url: http://www.linkedin.com/updates?discuss=&scope=155808408&stype=M&topic=5808858170726023168&type=U&a=jAuW
+  _wpas_done_632636: '1'
+  publicize_tumblr_url: http://blogjlt.tumblr.com.tumblr.com/post/67550440849
+  _wpas_done_4629400: '1'
+  _wpas_skip_4629375: '1'
+  _wpas_skip_4629390: '1'
+  _wpas_skip_632639: '1'
+  _wpas_skip_632636: '1'
+  _wpas_skip_4629400: '1'
+author: 
+---
+<p>Recursion has always fascinated me for its simplicity. Whenever I come across a new recursive equation I had never known I feel happy about knowing it. But then there is a trade of with this simplicity for they say that in general recursive solutions are not as efficient as their iterative versions. Being a computer science geek and attached to algorithm programming, I am obsessed about efficiency of the code I write but recursion for its simplicity always allows me that exception. A road less traveled for me has been backtracking for backtracking involves trying all possibilities and it sounds awful in terms of complexities to say the least when you hear that first. But sometimes it is the only solution available or at least I see some classic problems like<a title="wiki link for 8 queens problem" href="http://en.wikipedia.org/wiki/Eight_queens_puzzle"> 8-queens problem</a> which people solve using backtracking. It is for this reason that I thought it would be good to cover a post on backtracking to throw in some much deserved respect to this genre of algorithms. Lets try and learn backtracking approach to algorithms. Lets go through some simple problems to understand the idea. The first code we will write here is to generate all strings of n bits. For simplicity, we assume that we have a global array 'ar' available. Here is the code:</p>
+<p>[sourcecode language="c"]<br />
+void generate_all(int n)<br />
+{<br />
+        if(n&lt;1) printf(&quot;%s\n&quot;, ar);<br />
+        else{<br />
+                ar[n-1]='0';        //fix (n)th bit as '0'<br />
+                generate_all(n-1);  //generate all combinations for other n-1 positions.<br />
+                ar[n-1]='1';        //fix (n)th bit as '1'<br />
+                generate_all(n-1);  //generate all combinations for other n-1 positions.<br />
+        }<br />
+}<br />
+[/sourcecode]</p>
+<p>The output of this code is:<br />
+000 100 010 110 001 101 011 111<br />
+The code is exponential in complexity- O(2^n). Here n=3, so we have 8 strings in the output. Lets now generalize this code to print k-ary strings.</p>
+<p>[sourcecode language="c"]<br />
+void generate_all(int n, int k)<br />
+{<br />
+        if(n&lt;1) printf(&quot;%s\n&quot;, ar);<br />
+        else{<br />
+                for(int j=0;j&lt;k;j++)         //iterate over all k elements.<br />
+                {<br />
+                        ar[n-1]='0'+j;       //fix the (n)th position<br />
+                        generate_all(n-1,k); //generate all combinations for other n-1 positions.<br />
+                }<br />
+        }<br />
+}<br />
+[/sourcecode]</p>
+<p>The output of this code is as follows:<br />
+000 100 200 300 010 110 210 310 020 120 220 320 030 130 230 330 001 101 201 301 011 111 211 311 021 121 221 321 031 131 231 331 002 102 202 302 012 112 212 312 022 122 222 322 032 132 232 332 003 103 203 303 013 113 213 313 023 123 223 323 033 133 233 333<br />
+This code is also exponential in nature- O(k^n). Here k=4 and n=3, so we have 64 strings in the output. Lets now add just a little more logic to that. We now write a code to print all permutations of a given string. The input string can be anything as opposed to first k characters starting with '0' in the earlier example.</p>
+<p>[sourcecode language="cpp"]<br />
+#include<br />
+#include<br />
+#include<br />
+using namespace std;</p>
+<p>void generate_all(int depth, char* permutation, int *used, char *original)<br />
+{<br />
+        int length=strlen(original);<br />
+        if(depth==length){                   //base case<br />
+                permutation[depth]='&#092;&#048;';     //so that we have an end marker for the string<br />
+                printf(&quot;%s\n&quot;, permutation);<br />
+        }<br />
+        else{<br />
+                for(int i=0;i&lt;length;i++){<br />
+                        if(!used[i]){<br />
+                                used[i]=1;   //Mark this position in &quot;permutation&quot; string used<br />
+                                permutation[depth]=original[i]; //fix the (i)th position<br />
+                                generate_all(depth+1, permutation, used, original); //generate all permutations for remaining (not marked used yet)positions<br />
+                                used[i]=0; //Prepare to backtrack<br />
+                        }<br />
+                }<br />
+        }<br />
+}</p>
+<p>int main()<br />
+{<br />
+        int used[]={0,0,0};<br />
+        char * p;<br />
+        char original[]=&quot;abc&quot;;<br />
+        generate_all(0, p, used,original);<br />
+        return 0;<br />
+}<br />
+[/sourcecode]</p>
+<p>The output of the above code is:</p>
+<p>abc acb bac bca cab cba</p>
+<p>If we instead make our input string: "aaa", we get the output:</p>
+<p>aaa aaa aaa aaa aaa aaa</p>
+<p>I found the <a title="geeksforgeeks solution " href="http://www.geeksforgeeks.org/write-a-c-program-to-print-all-permutations-of-a-given-string/">same question (last one) on geeksforgeeks</a> but they solve it differently which is not very intuitive to me. To print only the unique strings in output, you can follow <a title="code to print only unique strings" href="http://ideone.com/acjCxb">this code</a>. This post is a primer and hence let us stop here. Try not to learn the exact questions and their solution but the way recursion unfolds and the way it backtracks again to look at the other parts of solution. Since we stop here with pretty basic stuff, let me make a promise to cover more backtracking codes in the coming posts. In the meantime if you are interested, have a look at the classic 8-queens problem and how backtracking is used to solve it.</p>

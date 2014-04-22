@@ -1,0 +1,65 @@
+---
+layout: post
+title: CAP theorem and NoSQL databases
+categories:
+- Tech-talks
+tags:
+- CAP theorem
+- NoSQL
+status: publish
+type: post
+published: true
+meta:
+  _publicize_pending: '1'
+  publicize_facebook_url: https://facebook.com/782344921780096
+  publicize_linkedin_url: http://www.linkedin.com/updates?discuss=&scope=155808408&stype=M&topic=5819126607972941824&type=U&a=7k95
+  _wpas_done_4629375: '1'
+  _publicize_done_external: a:1:{s:8:"facebook";a:1:{i:100000137867141;b:1;}}
+  publicize_google_plus_url: https://plus.google.com/111959874870497087457/posts/DXXwc6CEg7E
+  _wpas_done_4629390: '1'
+  publicize_twitter_user: ShivjiJha
+  publicize_twitter_url: http://t.co/C6psoBJzOP
+  _wpas_done_632639: '1'
+  _wpas_done_632636: '1'
+  publicize_tumblr_url: http://blogjlt.tumblr.com.tumblr.com/post/70402269382
+  _wpas_done_4629400: '1'
+  _wpas_skip_4629375: '1'
+  _wpas_skip_4629390: '1'
+  _wpas_skip_632639: '1'
+  _wpas_skip_632636: '1'
+  _wpas_skip_4629400: '1'
+author: 
+---
+<p>I was talking to a friend yesterday who said <del>"RDBMS is going to go away, everyone uses NoSQL these days"</del>. This served as the motivation behind writing this post. No, I dont think that is the case by any stretch of imagination. This got me into reading more about NoSQL databases. Lets travel down this path to understand why the NoSQL databases are so popular today and how they started.</p>
+<p>To get started on this, lets first try to understand the <a title="Wiki article of CAP theorem" href="http://en.wikipedia.org/wiki/CAP_theorem">CAP theorem</a>. There are three ingredients in the CAP theorem namely:</p>
+<ol>
+<li><span style="line-height:1.5em;"><strong>Consistency</strong>- Having the same data across all the nodes in the cluster at any given instant of time.</span></li>
+<li><span style="line-height:1.5em;"><strong>Availability</strong>- Being able to serve always. No downtime and least possible response time.</span></li>
+<li><span style="line-height:1.5em;"><strong>Partition Tolerance</strong>- The system continues to serve even if some link is  broken and your cluster is broken into two or more parts. There could be a loss of a message, some node may crash, but you still want to be able to serve. </span></li>
+</ol>
+<p>Now the CAP theorem states that you can carry home only two out of these three. This is where the difference in RDBMS and NoSQL lies! Lets look at the three combinations we can form here[2]:</p>
+<ol>
+<li><strong>CA</strong> - data is consistent between all nodes - as long as all nodes are online - and you can read/write from any node and be sure that the data is the sam.</li>
+<li><strong>CP</strong> - data is consistent between all nodes, and maintains partition tolerance by becoming unavailable when a node goes down.</li>
+<li><strong>AP</strong> - nodes remain online even if they can't communicate with each other and will resync data once the partition is resolved, but you aren't guaranteed that all nodes will have the same data (either during or after the partition)</li>
+</ol>
+<p>Now look at the case of some popular NoSQL customers and then return back to see why NoSQL is good and applicable to them but RDBMS in my opinion will co-exist.<br />
+Lets talk of amazon.com first. Their business model is such that they want to be available all the time. They wouldn't want their site to be down or have a higher response time at any moment. So it is very essential for them to have the 'A' and 'P' attributes of the CAP theorem. They would rather give away the 'C' for it to an extent. Getting a regret from amazon.com saying we don't have this item although we showed you it was available earlier is not as bad as the site itself going down. So if there was one item and two people simultaneously put it into their carts, that could happen but given their business model they can have alternatives to save their customers of this situation. For instance they could have some extra items in the stock always.</p>
+<p>Similarly when you think of facebook.com, suppose you post a picture on your wall. Its not a great deal if one of your friends can see that picture and the other will be able to see the picture a few moments later. Again, it doesn't care as much about consistency as it does to the availability.</p>
+<p>Lets now think why was the cluster or a farm of servers needed after all. Its because everything you do on internet is being stored in a database. Google, facebook, amazon etc are examples who keep all this data for providing personalized search or recommendations etc. This huge amount of data in the order of petabytes or zetabytes can not be stored on one disk. To try to store all of them on one disk and replicate it to more such disks is a pain and that is why google chose to use a farm of of several servers with smaller disks. Traditional RDBMS was built to best serve on a single disk and that is why people with this huge data came up with BigTable, DynamoDB etc.</p>
+<p>And as we near the end of this article, its importnat to have a look at some NoSQL databases. There are many out there which can be broadly divided into 4 categories:</p>
+<ol>
+<li><b>Column</b>: <a title="HBase" href="http://en.wikipedia.org/wiki/HBase">HBase</a>, <a title="Accumulo" href="http://en.wikipedia.org/wiki/Accumulo">Accumulo</a></li>
+<li><b>Document</b>: <a title="MarkLogic" href="http://en.wikipedia.org/wiki/MarkLogic">MarkLogic</a>, <a title="MongoDB" href="http://en.wikipedia.org/wiki/MongoDB">MongoDB</a>, <a title="Couchbase" href="http://en.wikipedia.org/wiki/Couchbase">Couchbase</a></li>
+<li><b>Key-value</b> : <a title="Dynamo (storage system)" href="http://en.wikipedia.org/wiki/Dynamo_(storage_system)">Dynamo</a>, <a title="Riak" href="http://en.wikipedia.org/wiki/Riak">Riak</a>, <a title="Redis" href="http://en.wikipedia.org/wiki/Redis">Redis</a>, <a title="MemcacheDB" href="http://en.wikipedia.org/wiki/MemcacheDB">Cache</a>, <a title="Project Voldemort" href="http://en.wikipedia.org/wiki/Project_Voldemort">Project Voldemort</a></li>
+<li><b>Graph</b>: <a title="Neo4J" href="http://en.wikipedia.org/wiki/Neo4J">Neo4J</a>, <a title="AllegroGraph" href="http://en.wikipedia.org/wiki/AllegroGraph">Allegro</a>, <a title="Virtuoso Universal Server" href="http://en.wikipedia.org/wiki/Virtuoso_Universal_Server">Virtuoso</a></li>
+</ol>
+<p>Note that there isnt a concrete line between the 4 types. As an example, the document oriented databases and the key-value databases could resemble the other type to seom extent at times. So the boundaries are a little fuzzy. To conclude with, I would say NoSQL databases are popular and are good in certain circumstances, but when you come to something like say banking you really need ACID compliance and therefore the RDBMS. So in my opinion they will co-exist as they today.</p>
+<p>References:</p>
+<ol>
+<li><a href="http://en.wikipedia.org/wiki/CAP_theorem">http://en.wikipedia.org/wiki/CAP_theorem</a></li>
+<li><a href="http://stackoverflow.com/questions/12346326/nosql-cap-theorem-availability-and-partition-tolerance">http://stackoverflow.com/questions/12346326/nosql-cap-theorem-availability-and-partition-tolerance</a></li>
+<li><a href="http://stackoverflow.com/questions/16779348/does-the-cap-theorem-imply-that-acid-is-not-possible-for-distributed-databases">http://stackoverflow.com/questions/16779348/does-the-cap-theorem-imply-that-acid-is-not-possible-for-distributed-databases</a></li>
+<li><a href="http://en.wikipedia.org/wiki/NoSQL">http://en.wikipedia.org/wiki/NoSQL</a></li>
+<li><a href="https://www.youtube.com/watch?v=qI_g07C_Q5I">https://www.youtube.com/watch?v=qI_g07C_Q5I</a></li>
+</ol>

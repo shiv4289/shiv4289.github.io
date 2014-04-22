@@ -1,0 +1,36 @@
+---
+layout: post
+title: Backtracking -II
+categories: []
+tags: []
+status: draft
+type: post
+published: false
+meta: {}
+author: 
+---
+<p>In the <a title="My first post on backtracking" href="http://shiv4289.wordpress.com/2013/11/20/backtracking-i-primer/">previous post on backtracking</a>, we saw some basic examples of backtracking. If you are not familiar with this technique I recommend reading the previous post first. Lets now look at some more codes. Most of this codes are inspired from from <a title="geeksforgeeks website" href="http://www.geeksforgeeks.org/">geeksforgeeks</a>-a great repository of algorithms. The first code we see today prints all possible strings of length k given a set of n characters. Note that given a set of n characters, we can find k^n strings of length k comprising of characters from the given set.</p>
+<p>[sourcecode language="cpp"]<br />
+#include &lt;cstdio&gt;<br />
+#include &lt;iostream&gt;<br />
+#include &lt;string&gt;<br />
+using namespace std;</p>
+<p>void generate_all_len_k(string s, string p, int n, int k)<br />
+{<br />
+        if(k==0){                                   //base case<br />
+                cout&lt;&lt;p&lt;&lt;&quot;\t&quot;;<br />
+                return;<br />
+        }<br />
+        for(int i=0;i&lt;n;i++){                       //iterate over all characters in the given string<br />
+                string newp=p+s[i];                 //add this character at the end of the prefix string<br />
+                generate_all_len_k(s,newp,n,k-1);   //find all permutations of the other k-1 characters drawn from the n given characters<br />
+        }<br />
+}</p>
+<p>int main()<br />
+{<br />
+   string s(&quot;AB&quot;);<br />
+   string prefix(&quot;&quot;);                               // we start with an empty prefix.<br />
+   generate_all_len_k(s, prefix,2,3);<br />
+   return 0;<br />
+}<br />
+[/sourcecode]</p>

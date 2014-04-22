@@ -1,0 +1,93 @@
+---
+layout: post
+title: ! 'C/C++: Variable number of arguments to a function(2)'
+categories:
+- Coding
+- Some Beautiful Codes
+tags: []
+status: publish
+type: post
+published: true
+meta:
+  _wpas_mess: ! 'C/C++: Variable number of arguments to a function(2) http://wp.me/p1iidx-4N'
+  _publicize_pending: '1'
+  publicize_twitter_user: ShivjiJha
+  _wpas_done_632639: '1'
+  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:501487031;b:1;}}
+  _wpas_done_632636: '1'
+  _wpas_skip_632639: '1'
+  _wpas_skip_632636: '1'
+author: 
+---
+<p>Summary: This post discuses va_copy and its uses. There is a code below that shows its use.</p>
+<p>This is my second post on the topic. If you dont know how these va_* macros work, you may want to read my <a title="How to write a function in C that taks variable number of arguments" href="http://shiv4289.wordpress.com/2013/05/18/cc-variable-number-of-arguments-to-a-function/">previous post</a> on this topic. When you learn the concept for the first time, you are tempted to believe that its a great idea to have a lot of functions of this type. Wont that be a great flexibility to have all the time? Unfortunately, thats not true. The problem is:</p>
+<ol>
+<li>va_arg() assumes the elements in va_list object to be of a given data type. So, you must know the types in advance to be able to extract the values from the va_ist object.</li>
+<li>Once you have traversed a va_list object, you can <strong>not</strong> get the first element again by resetting the pointers in for the same object.</li>
+</ol>
+<p>Lets talk about the possible problems with (2). Lets try out various ways of getting the pointers reset to the beginning of the va_list object. Lets assume we have va_list "<strong>src</strong>" as the given list which we have traversed and "<strong>dest</strong>" as a copy of the same list. We want to be able to get the first element of the va_list after <strong>src</strong> has traversed  the complete va_list object once. On that route, lets first think what a possible implementation of va_list would do. The first thing that comes to mind is that a <strong><i>va_list</i></strong> object could be a pointer to the stack frame of the variadic function. In this situation, it seems perfectly alright to make an assignment say,</p>
+<pre>va_list dest = src;</pre>
+<p>Unfortunately, that doesnt work all the time. The next possibility could be that the va_list object is an array of pointers pointing to individual arguments in the variable argumet list , So, we can do a</p>
+<pre>va_list dest;
+*dest = *src;</pre>
+<p>But that is also not the foolproof way because, on certain systems where arguments are passed in registers, it may be necessary for <b>va_start</b>() to allocate memory, store the arguments there, and also an indication of which argument is next, so that <b>va_arg</b>() can step through the list. Now <b>va_end</b>() can free the allocated memory again. So, there is no way you will be able to access that element again. But all is not gloomy my friend  for the standard thus defines an interface in the name of <strong>va_copy()</strong> , so that the above assignments can be replaced by</p>
+<p style="padding-left:30px;">va_list dest;<br />
+va_copy(dest, src);<br />
+...<br />
+va_end(dest);</p>
+<p>And this is a foolproof way !!! Finally :)<br />
+Note that the compiler wont complain about the wrongdoings in the methods discusses above. The compilation and linking will all pass fine, only when you see the outputs they will appear weird.  The good news is, you can always use <strong>va_copy</strong>() function to get a replica of a va_list object at that instant of time. So, if you want to use the variable argument list a second time, just use this function. The prototype is:</p>
+<pre><span style="font-family:Georgia, 'Times New Roman', 'Bitstream Charter', Times, serif;font-size:13px;line-height:19px;">void va_copy (va_list destination, va_list source);</span></pre>
+<p>Just remember that each invocation of va_copy() must be matched by a corresponding invocation of va_end() in the same function. Lets now look at a small code to see va_copy() in action.</p>
+<p>[sourcecode language="cpp"]</p>
+<p>#include&lt;stdio.h&gt;<br />
+#include &lt;stdarg.h&gt;</p>
+<p>/* The sum() function can accept variable number of arguments.<br />
+   In the function declaration &quot;...&quot; at the end means that the<br />
+   number and  type of the arguments may vary. The marker ... can<br />
+   only appear at the end.<br />
+*/<br />
+int sum(int num_of_arguments, ... )<br />
+{<br />
+   /* A list to store the aruements. In example, this may contain<br />
+      1,2,3 and 4 elements on successive calls from main()<br />
+   */<br />
+   va_list args;<br />
+   int sum= 0, i;</p>
+<p>   /* Directing the va_list args initialized above to start storing<br />
+      all parameters folloowing the first parameter 'num_of_arguments'<br />
+   */<br />
+   va_start (args, num_of_arguments );</p>
+<p>   va_list args_copy; //initialize a copy of va_list to be used<br />
+   va_copy(args_copy, args); //copy args to args_copy</p>
+<p>   for (i= 0; i&lt; num_of_arguments; i++ )<br />
+   /* We add 5 to each element in variable argument list and<br />
+      print it.<br />
+   */<br />
+   printf(&quot;%d &quot;, va_arg (args_copy, int) + 5);</p>
+<p>   va_end(args_copy); //destruct args_copy</p>
+<p>   printf(&quot;\n&quot;);</p>
+<p>   /**** Next, we use args as in previous post ****/</p>
+<p>   /* Loop until all parameters are seen. */<br />
+   for (i= 0; i&lt; num_of_arguments; i++ )<br />
+     /* Extract the next value in argument list and add it to sum. */<br />
+     sum += va_arg (args,int);</p>
+<p>   /* Signal that we are done with our usage of the list */<br />
+   va_end (args);</p>
+<p>   return sum; /* Returns the calculated sum.*/<br />
+}<br />
+int main()<br />
+{<br />
+   int result;</p>
+<p>   result=sum (4,1,2,3,4);<br />
+   printf(&quot;result of sum() with 5 arguement: %d \n&quot;, result);</p>
+<p>   return 0;<br />
+}</p>
+<p>[/sourcecode]</p>
+<p>Play with the <a href="http://ideone.com/vmP9Ab">above code on ideone</a>. Change a few things here and there and see how it works.</p>
+<p>Happy coding !!!</p>
+<p>References:</p>
+<ul>
+<li> Linux man page: <a href="http://linux.die.net/man/3/va_copy">http://linux.die.net/man/3/va_copy</a></li>
+<li> <a href="http://www.cplusplus.com/reference/cstdarg/va_copy/">http://www.cplusplus.com/reference/cstdarg/va_copy/</a></li>
+</ul>

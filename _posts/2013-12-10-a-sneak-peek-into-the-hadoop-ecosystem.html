@@ -1,0 +1,49 @@
+---
+layout: post
+title: A sneak peek into the Hadoop ecosystem
+categories:
+- Tech-talks
+tags:
+- Hadoop
+- HDFS MapReduce
+status: publish
+type: post
+published: true
+meta:
+  _publicize_pending: '1'
+  publicize_facebook_url: https://facebook.com/777690872245501
+  _wpas_done_4629375: '1'
+  _publicize_done_external: a:1:{s:8:"facebook";a:1:{i:100000137867141;b:1;}}
+  publicize_google_plus_url: https://plus.google.com/111959874870497087457/posts/76GZFKjg539
+  _wpas_done_4629390: '1'
+  publicize_twitter_user: ShivjiJha
+  publicize_twitter_url: http://t.co/4hyZf1mxwL
+  _wpas_done_632639: '1'
+  publicize_linkedin_url: http://www.linkedin.com/updates?discuss=&scope=155808408&stype=M&topic=5816249265554468864&type=U&a=lq1J
+  _wpas_done_632636: '1'
+  publicize_tumblr_url: http://blogjlt.tumblr.com.tumblr.com/post/69607927311
+  _wpas_done_4629400: '1'
+  _wpas_skip_4629375: '1'
+  _wpas_skip_4629390: '1'
+  _wpas_skip_632639: '1'
+  _wpas_skip_632636: '1'
+  _wpas_skip_4629400: '1'
+author: 
+---
+<p>I jumped into the IT field for the love I had for it and the biggest distraction for me has always been trying to know something I know nothing about. Ever since some of my colleagues started working with Hadoop, I have been wanting to read about it. To follow with the same, the continous drive has been a feeing that there has to be something really nice about big data for everyone talking about it find themselves so cool. And finally the latest <a title="big data is like teenage sex" href="https://www.facebook.com/dan.ariely/posts/904383595868">post on facebook</a> by a professor saying:-</p>
+<blockquote><p>Big data is like teenage sex: everyone talks about it, nobody really knows how to do it, everyone thinks everyone else is doing it, so everyone claims they are doing it...</p></blockquote>
+<p>Well this quote is pretty famous by now and I must acknowledge this was something which pushed me into studying more about what this actually is, why is it so cool! Hopefully the next time I bump into some cool people I have something to talk about as well :D . I finally found some time and energy to study some of it this weekend. Here is a high level overview of the picture[1] I have in my mind right now:</p>
+<p><a href="http://shiv4289.files.wordpress.com/2013/12/hadoop_ecosystem_.jpg"><img class="aligncenter size-full wp-image-463" alt="hadoop_ecosystem_" src="http://shiv4289.files.wordpress.com/2013/12/hadoop_ecosystem_.jpg" width="604" height="583" /></a></p>
+<p><span style="text-decoration:underline;"><strong>HDFS </strong></span></p>
+<p>The base of this ecosystem is the Hadoop Distributed File system derived from the Google's whitepaper for Google File System(GFS). Lets take a simple example[2] to understand HDFS. Lets say we have a record containing the phone numbers of all the people in a city. You use say a 5 machines Hadoop Cluster to keep this data. Lets say we want to have a replication factor of 3 which means every chunk of data you have will have 2 extra backup copies stored on different machines. Further lets assume that you divide the hard disks on your 5 machines into 78 pieces. Lets say you store phone numbers of all the people whose names start with 'A' on one piece of a disk and keep its back up on the other two machines. Similary do that to all people's names starting with alphabets 'B'-'Z' In this way you organize your data on the 3 machines.</p>
+<p><span style="text-decoration:underline;"><strong>MapReduce</strong></span>: To generate a report from all the data, you would now need MapReduce codes. The MapReduce API is available opensource for use. But you will have to write some good Java codes to run the map jobes parallely on all those machines and get the results back (Reduce) to generate the final report.</p>
+<p><span style="text-decoration:underline;"><strong>Hive &amp; Pig Frameworks</strong></span>: Writing MapReduce jobs isnt a piece of cake. So, Facebook made the Hive framework allow an easy way to do the same. Hive uses SQL-ish syntax to do things on the data lying on the Hadoop layer below. Pig is a similar framework built by Yahoo but it is more of a data flow language. In Hive a user can specify that data from two tables must be joined with an easy syntax like SQL, but not what join implementation to use. Pig is procedural and though you will have a little more to write there it does allows you the flexibility to specify an implementation of how you would like to join different chunks of data.</p>
+<p><span style="text-decoration:underline;"><strong>HBase</strong></span> is a NoSQL database that allows you to work the enormous amount of data stored on the Hadoop system. It is a column-oriented database management system. It is well suited for sparse data sets, which are common in many big data use cases. HBase does not support a structured query language like SQL. They are written in Java much like a typical MapReduce application.</p>
+<p><span style="text-decoration:underline;"><strong>ZooKeeper</strong></span> is a centralized infrastructure that helps synchronize across clusters. It maintains common objects needed in large cluster environments. Examples of these objects include configuration information hierarchical naming space, and so on. Applications can leverage these services to coordinate distributed processing across large clusters.</p>
+<p><span style="text-decoration:underline;"><strong>Sqoop</strong></span> can be used to import data from a RDBMS system (say MySQL/Oracle/MsSQL server) into HDFS or vice-versa.</p>
+<p><span style="text-decoration:underline;"><strong>Flume</strong></span> is the tool to gather data from various sources into your Hadoop system. Its mostly used for log data.</p>
+<p><strong><span style="text-decoration:underline;">Closing Remarks</span>:</strong><br />
+To end with I would like to state that I am by no means an expert on big data. In fact I am a beginner just interested in knowing this uber-cool technology. And with this post all I aim is to start a discussion so that we can together start learning it bit by bit! So, if you find a mistake therein, please do help me learn it better :)</p>
+<p><span style="text-decoration:underline;"><strong>References</strong></span>:<br />
+1) http://www.youtube.com/watch?v=R-qjyEn3bjs<br />
+2) http://www-01.ibm.com/software/data/infosphere/hadoop/</p>

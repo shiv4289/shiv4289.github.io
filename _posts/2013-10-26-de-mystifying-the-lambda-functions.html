@@ -1,0 +1,40 @@
+---
+layout: post
+title: De-mystifying the Lambda functions
+categories: []
+tags: []
+status: draft
+type: post
+published: false
+meta: {}
+author: 
+---
+<p>After grinding through some Ruby codes all day long, I planned to study something light at night and opened up my wishlist to find "Lambda functions" listed there. I have been through Lambda functions many times earlier but I could never understand whats so cool about them for  there are alternate ways of doing things all the time. To have an idea of the same, I googled it out and as it happens most of times, I found a question on <a title="stackoverflow home page" href="http://stackoverflow.com/" target="_blank">stackoverflow</a> which seemed like the exact same question I had in mind. The <a title="the question on stackoverflow regarding labda function" href="http://stackoverflow.com/questions/3259322/why-use-lambda-functions" target="_blank">question titled "Why use lambda functions?</a>"  says:</p>
+<blockquote><p>I can find lots of stuff showing me what a lambda function is, and how the syntax works and what not. But other than the "coolness factor" (I can make a function in middle a call to another function, neat!) I haven't seen something that's overwhelmingly compelling to say why I really need/want to use them. It seems to be more of a stylistic or structural choice in most examples I've seen. How does it make my programs, more correct, more reliable, faster, or easier to understand?</p></blockquote>
+<p>Lets get started with some cool little examples of Lambda functions. Note that I will be mostly using python codes in this post. If you are a C enthusiast (Well me too ;)) you dont need much more than a <a title="C++ lambda expressions" href="https://www.youtube.com/watch?v=5t-_wI7nFdU" target="_blank">youtube video</a> to familiarize with the syntax of Lambda functions in C++ 11.</p>
+<p><span style="color:#0000ff;"><code>&gt;&gt;&gt; </code></span><code>foo = [2, 18, 9, 22, 17, 24, 8, 12, 27]</code><br />
+<span style="color:#0000ff;"><code>&gt;&gt;&gt; </code></span><code>print filter(lambda x: x % 3 == 0, foo)</code></p>
+<table width="100%" cellspacing="0" cellpadding="2" bgcolor="#d0f0ff">
+<tbody>
+<tr>
+<td><code>[18, 9, 24, 12, 27]</code></td>
+</tr>
+</tbody>
+</table>
+<p><span style="color:#0000ff;"><code>&gt;&gt;&gt; </code></span><code>print map(lambda x: x * 2 + 10, foo)</code></p>
+<table width="100%" cellspacing="0" cellpadding="2" bgcolor="#d0f0ff">
+<tbody>
+<tr>
+<td><code>[14, 46, 28, 54, 44, 58, 26, 34, 64]</code></td>
+</tr>
+</tbody>
+</table>
+<p><span style="color:#0000ff;"><code>&gt;&gt;&gt; </code></span><code>print reduce(lambda x, y: x + y, foo)</code></p>
+<table width="100%" cellspacing="0" cellpadding="2" bgcolor="#d0f0ff">
+<tbody>
+<tr>
+<td><code>139</code></td>
+</tr>
+</tbody>
+</table>
+<p><a href="http://www.secnetix.de/olli/Python/lambda_functions.hawk">http://www.secnetix.de/olli/Python/lambda_functions.hawk</a></p>

@@ -1,0 +1,121 @@
+---
+layout: post
+title: z-algorithm for pattern matching
+categories:
+- Algorithms
+- Coding
+tags: []
+status: publish
+type: post
+published: true
+meta:
+  _publicize_pending: '1'
+  _wpas_done_4629375: '1'
+  publicize_twitter_user: ShivjiJha
+  _wpas_done_632639: '1'
+  _publicize_done_external: a:1:{s:7:"twitter";a:1:{i:501487031;b:1;}}
+  _wpas_done_632636: '1'
+  _wpas_done_4629390: '1'
+  _wpas_mess: z-algorithm for pattern matching http://wp.me/p1iidx-55
+  _wpas_skip_632639: '1'
+  _wpas_skip_632636: '1'
+  _wpas_done_4629400: '1'
+  _wpas_skip_4629375: '1'
+  _wpas_skip_4629390: '1'
+  _wpas_skip_4629400: '1'
+author: 
+---
+<p>String algorithms are a traditional area of study in computer science and there is a wide variety of standard algorithms available. The more algorithms you know, the more easier it gets to work with them :) As the title of the post says, we will try to explore the z-algorithm today. Lets first formulate the problem statement and a couple of definitions. To start with lets look at the below mentioned question (from i<a title="string-similarity" href="https://www.hackerrank.com/challenges/string-similarity">nterviewstreet</a>):</p>
+<p><span style="text-decoration:underline;"><strong>QUESTION</strong></span></p>
+<p>For two strings A and B, we define the similarity of the strings to be the length of the longest prefix common to both strings. For example, the similarity of strings “abc” and “abd” is 2, while the similarity of strings “aaa” and “aaab” is 3.</p>
+<p>Calculate the sum of similarities of a string S with each of it’s suffixes.</p>
+<p><strong>Sample Input:</strong><br />
+2<br />
+ababaa<br />
+aa</p>
+<p><strong>Sample Output:</strong><br />
+11<br />
+3</p>
+<p><strong>Explanation:</strong><br />
+For the first case, the suffixes of the string are “ababaa”, “babaa”, “abaa”, “baa”, “aa” and “a”. The similarities of each of these strings with the string “ababaa” are 6,0,3,0,1,1 respectively. Thus the answer is 6 + 0 + 3 + 0 + 1 + 1 = 11.</p>
+<p>For the second case, the answer is 2 + 1 = 3.</p>
+<p><span style="text-decoration:underline;"><strong>SOLUTION 1:</strong></span></p>
+<p>The most intuitive way (brute force)  to solve this problem is simple, take out every suffix of the given string and match it with the given string to find the number of matching characters.Now add all such numbers for every suffix and there you have it solved.</p>
+<p>[sourcecode language="cpp"]<br />
+#include &lt;string&gt;<br />
+#include &lt;iostream&gt;<br />
+#include &lt;algorithm&gt;<br />
+using namespace std;<br />
+long long similarity(string s, int k){<br />
+   long long i;<br />
+   for(i=0;k+i&lt;s.size();i++){<br />
+      if(s[i]!=s[k+i]) break;<br />
+   }<br />
+   return i;<br />
+}</p>
+<p>int main() {<br />
+   string s; long long sum;<br />
+   getline(cin,s);<br />
+   sum=s.size();<br />
+   for(long long i=1;i&lt;s.size();i++){<br />
+      sum+=similarity(s,i);<br />
+   }<br />
+   cout&lt;&lt;sum&lt;&lt;endl;<br />
+   return 0;<br />
+}</p>
+<p>[/sourcecode]</p>
+<p>But this is costly as we are not using one result to calculate the next one.  So we are throwing away some valuable info and calculating things from scratch everytime. If you try the above solution, it will get you a TLE (time limit exceeded). To get this in time, we need to come up with a better algorithm. Lets discuss this better algorithm to solve this- the Z-algorithm.  The z-algorithm gives you a Z-array which is exactly what we need in this question to sum up and print the answer- The similarity of each suffix to the prefix. A tutorial for the z-algorithm can be found in video at:</p>
+<ol>
+<li><a href="http://www.youtube.com/watch?v=MFK0WYeVEag">http://www.youtube.com/watch?v=MFK0WYeVEag</a>   and</li>
+<li><a href="http://www.youtube.com/watch?v=NVJ_ELSbbew">http://www.youtube.com/watch?v=NVJ_ELSbbew</a></li>
+</ol>
+<p>The algorithm is explained quite nicely in these videos.</p>
+<p><span style="text-decoration:underline;"><strong>SOLUTION 2:</strong></span></p>
+<p><strong> </strong>Once you understand the z-algorithm, its easy to guess that the solution to this question is nothing but sum of all the z values. Lets see the code now:</p>
+<p>[sourcecode language="cpp"]</p>
+<p>#include &lt;string&gt;<br />
+#include &lt;cstdio&gt;<br />
+#include &lt;vector&gt;<br />
+#include &lt;iostream&gt;<br />
+#include &lt;algorithm&gt;<br />
+using namespace std;</p>
+<p>long long compute_z(string s){<br />
+   long long sum=0;<br />
+   int n = s.length();<br />
+   vector&lt;int&gt; z(n,0);</p>
+<p>   long long L = 0, R = 0;<br />
+   for (long long i = 1; i &lt; n; i++) {<br />
+      if (i &gt; R) {<br />
+         L = R = i;<br />
+         while (R &lt; n &amp;&amp; s[R-L] == s[R]) R++;<br />
+         z[i] = R-L; R--;<br />
+      }</p>
+<p>      else {</p>
+<p>         int k = i-L;<br />
+         if (z[k] &lt; R-i+1) z[i] = z[k];<br />
+         else {<br />
+            L = i;<br />
+            while (R &lt; n &amp;&amp; s[R-L] == s[R]) R++;<br />
+            z[i] = R-L; R--;<br />
+         }<br />
+      }<br />
+      sum+=z[i];<br />
+   }<br />
+   return sum;<br />
+}</p>
+<p>int main() {<br />
+  int t; string s; long long sum;<br />
+  cin&gt;&gt;t;getchar();<br />
+  while(t--){<br />
+    getline(cin,s);<br />
+    cout&lt;&lt;compute_z(s)+s.size()&lt;&lt;endl;<br />
+  }<br />
+  return 0;<br />
+}</p>
+<p>[/sourcecode]</p>
+<p>And yes this code is accepted :)</p>
+<p>In case you didn't notice yet,</p>
+<ul>
+<li>Z-algorithms can be used to find a given pattern (P) in a given text (T) in linear time. To do the same,  you need to pass the string(P+S) to the function compute_z(). If you have a z-value&gt;=pattern at an index 'i' . the pattern exists in the text at that index 'i'.  So, the z-algorithm helps you find all occurances of of pattern in the text.</li>
+<li>Another advantage of Z-algorithm is that though <a title="KMP algo with C++ code" href="http://www.geeksforgeeks.org/searching-for-patterns-set-2-kmp-algorithm/">KMP</a> has same time complexity as Z-Algorithm, Z-algorithm is a lot more easy to understand, remember and code :)</li>
+</ul>

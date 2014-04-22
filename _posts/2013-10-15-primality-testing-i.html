@@ -1,0 +1,68 @@
+---
+layout: post
+title: Primality testing- I (brute force, Sieve of Eratosthenes)
+categories:
+- Algorithms
+- Coding
+tags: []
+status: publish
+type: post
+published: true
+meta:
+  _publicize_pending: '1'
+  publicize_facebook_url: https://facebook.com/100000137867141_742507575763831
+  publicize_google_plus_url: https://plus.google.com/111959874870497087457/posts/Q6CWztHU9H9
+  _wpas_done_4629375: '1'
+  _publicize_done_external: a:1:{s:8:"facebook";a:1:{i:100000137867141;b:1;}}
+  _wpas_done_4629390: '1'
+  publicize_twitter_user: ShivjiJha
+  publicize_twitter_url: http://t.co/Vj5aF2Pd3t
+  _wpas_done_632639: '1'
+  publicize_linkedin_url: http://www.linkedin.com/updates?discuss=&scope=155808408&stype=M&topic=5795869431385059328&type=U&a=MbDt
+  _wpas_done_632636: '1'
+  publicize_tumblr_url: http://blogjlt.tumblr.com.tumblr.com/post/
+  _wpas_skip_4629375: '1'
+  _wpas_skip_4629390: '1'
+  _wpas_skip_632639: '1'
+  _wpas_skip_632636: '1'
+  _wpas_skip_4629400: '1'
+author: 
+---
+<p>If you are into algorithms, you would realize that Primality testing is a very important topic. In simple terms, Primality testing means finding if a number is prime or not. Lets discuss a few tricks for the same. There is actually a lot of number theory based on primality testing and it is impossible to cover all of them here. Nevertheless lets discuss some of them. This post starts with a simple brute-force algorithm and introduces Sieve of Eratosthenes. With these simple things covered, we will try and discuss more of primality testing in the following posts. Lets get started with the brute force approach!</p>
+<p><span style="text-decoration:underline;"><strong>NAIVE ALGORITHM:</strong></span></p>
+<p>Lets say the given number is n. The simplest(brute-force) way to find if a number is prime or not is to check if the number is divisible by any number in the range 2 to n-1. This follows from the definition of a prime number and should be easy to understand. At this moment, lets revisit a basic school grade mathematics property which says:</p>
+<blockquote><p>If a number, say n, is divisible by an integer k, then either k or n/k has to be &lt;= sqrt(n)</p></blockquote>
+<p>This means you dont need to check if n is divisible by any of the numbers in [0, n-1], rather you can just check for [0, sqrt(n)]. Well, Give yourself a pat on the back because that seems like a good enough optimization. If you were making 10000 checks in the former case, you have reduced it to just 100 iterations with the addition of this property.  Lets have a look at a small python code to illustrate this (source: <a title="brute force for primality testing- source of python code" href="https://github.com/jennings/ProjectEuler/blob/master/python/007-10001st-prime-number.py" target="_blank">github</a>):</p>
+<p>[sourcecode language="python"]</p>
+<p>def isPrime(n):<br />
+ maxPossibleFactor = int( floor( sqrt(n) ) )<br />
+ possibleFactors = range( 2, maxPossibleFactor+1 )<br />
+ divisibleFactors = [ n % i == 0 for i in possibleFactors ]<br />
+ return not any( divisibleFactors )</p>
+<p>[/sourcecode]</p>
+<p>That was easy. Right?</p>
+<p><span style="text-decoration:underline;"><strong>SIEVE OF ERAOSTHENES:</strong></span></p>
+<p>Lets move ahead and look at a slightly different question: Identify all the prime numbers below 1000. A naive way to do this is to call the above python function for [0-1000].  Sounds like bad... Can we do better? Yes, we can. Turns out there is a well known algorithm for doing this- Sieve of Eratosthenes. Lets see how this algorithm works (The explanation below is  <a title="The algorithm below is copied from this article" href="http://primes.utm.edu/glossary/xpage/sieveoferatosthenes.html" target="_blank">copied from here</a>):</p>
+<blockquote><p>Make a list of all the integers less than or equal to <i>n</i> (and greater than one). Strike out the multiples of all primes less than or equal to the square root of <i>n</i>, then the numbers that are left are the primes.</p></blockquote>
+<p>For example, to find all the primes less than or equal to 30, first list the numbers from 2 to 30.</p>
+<blockquote><p>2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30</p></blockquote>
+<p>The first number 2 is prime, so keep it (we will color it green) and cross out its multiples (we will color them red), so the red numbers are not prime.</p>
+<blockquote><p><span style="color:green;">2</span> 3 <span style="color:red;">4</span> 5 <span style="color:red;">6</span> 7 <span style="color:red;">8</span> 9 <span style="color:red;">10</span> 11 <span style="color:red;">12</span> 13 <span style="color:red;">14</span> 15 <span style="color:red;">16</span> 17 <span style="color:red;">18</span> 19 <span style="color:red;">20</span> 21 <span style="color:red;">22</span> 23 <span style="color:red;">24</span> 25 <span style="color:red;">26</span> 27 <span style="color:red;">28</span> 29 <span style="color:red;">30</span></p></blockquote>
+<p>The first number left (still black) is 3, so it is the first odd prime. Keep it and cross out all of its multiples. We know that all multiples less than 9 (i.e. 6) will already have been crossed out, so we can start crossing out at 3<sup>2</sup>=9.</p>
+<blockquote><p><span style="color:green;">2</span> <span style="color:green;">3</span> <span style="color:red;">4</span> 5 <span style="color:red;">6</span> 7 <span style="color:red;">8</span> <span style="color:red;">9</span> <span style="color:red;">10</span> 11 <span style="color:red;">12</span> 13 <span style="color:red;">14</span> <span style="color:red;">15</span> <span style="color:red;">16</span> 17 <span style="color:red;">18</span> 19 <span style="color:red;">20</span> <span style="color:red;">21</span> <span style="color:red;">22</span> 23 <span style="color:red;">24</span> 25 <span style="color:red;">26</span> <span style="color:red;">27</span> <span style="color:red;">28</span> 29 <span style="color:red;">30</span></p></blockquote>
+<p>Now the first number left (still black) is 5, the second odd prime. So keep it also and cross out all of its multiples (all multiples less than 5<sup>2</sup>=25 have already been crossed out, and in fact 25 is the only multiple not yet crossed out).</p>
+<blockquote><p><span style="color:green;">2</span> <span style="color:green;">3</span> <span style="color:red;">4</span> <span style="color:green;">5</span> <span style="color:red;">6</span> 7 <span style="color:red;">8</span> <span style="color:red;">9</span> <span style="color:red;">10</span> 11 <span style="color:red;">12</span> 13 <span style="color:red;">14</span> <span style="color:red;">15</span> <span style="color:red;">16</span> 17 <span style="color:red;">18</span> 19 <span style="color:red;">20</span> <span style="color:red;">21</span> <span style="color:red;">22</span> 23 <span style="color:red;">24</span> <span style="color:red;">25</span> <span style="color:red;">26</span> <span style="color:red;">27</span> <span style="color:red;">28</span> 29 <span style="color:red;">30</span></p></blockquote>
+<p>The next number left, 7, is larger than the square root of 30, so there are no multiples of 7 to cross off that haven't already been crossed off (14 and 28 by 2, and 21 by 3), and therefore the sieve is complete. Therefore all of the numbers left are primes: {2, 3, 5, 7, 11, 13, 17, 19, 23, 29}. Notice we just found these primes without dividing.</p>
+<p>Now, lets look at a fun animation to illustrate the algorithm (source: <a title="wikipedia animation for the algorithm" href="http://en.wikipedia.org/wiki/File:Sieve_of_Eratosthenes_animation.gif" target="_blank">wikipedia</a>):</p>
+<p><a href="http://shiv4289.files.wordpress.com/2013/10/sieve_of_eratosthenes_animation.gif"><img class="aligncenter size-full wp-image-401" alt="Sieve_of_Eratosthenes_animation" src="http://shiv4289.files.wordpress.com/2013/10/sieve_of_eratosthenes_animation.gif" width="445" height="369" /></a><br />
+With the algorithm clear now, lets look at a python code (source: <a title="python code for sieve algo" href="http://stackoverflow.com/questions/3939660/sieve-of-eratosthenes-finding-primes-python" target="_blank">stackoverflow</a>).</p>
+<p>[sourcecode language="python"]<br />
+def primes_sieve2(limit):<br />
+ a = [True] * limit # Initialize the primality list<br />
+ a[0] = a[1] = False</p>
+<p>for (i, isprime) in enumerate(a):<br />
+ if isprime:<br />
+ for n in xrange(i*i, limit, i): # Mark factors non-prime<br />
+ a[n] = False<br />
+[/sourcecode]</p>
+<p>If you have a trouble understanding some part of  this post or any other related question, please drop a comment. And by the time, we have the next post ready, you may try some questions related to prime numbers at <a href="http://projecteuler.net/problems">http://projecteuler.net/problems</a>. Happy coding :)</p>

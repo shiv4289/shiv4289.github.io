@@ -1,0 +1,251 @@
+---
+layout: post
+title: LCS and LIS .....
+categories:
+- Algorithms
+- Coding
+tags: []
+status: publish
+type: post
+published: true
+meta:
+  _wpas_mess: LCS and LIS .....
+  _wpas_skip_fb: '1'
+  _wpas_skip_linkedin: '1'
+  _wpas_skip_yup: '1'
+  _wpas_skip_twitter: '1'
+  _oembed_e18d71307865c993afb034df63e2f13f: ! '{{unknown}}'
+  twitter_cards_summary_img_size: a:6:{i:0;i:112;i:1;i:17;i:2;i:3;i:3;s:23:"width="112"
+    height="17"";s:4:"bits";i:16;s:4:"mime";s:9:"image/png";}
+author: 
+---
+<p><span style="text-decoration:underline;"><strong>LONGEST COMMON SUBSEQUENCE</strong></span></p>
+<p>LCS stands for <strong>Longest common  subsequence</strong> . It is a classic computer science problem, the basis of file comparison programs such as diff, and has applications in bioinformatics. If you are studying LCS for the first time , I would recommend   you to read  it from CLRS- Introduction to Algorithms . Charles Liesersen (one of the authors of the book) himself explains it <a title="x" href="http://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-046j-introduction-to-algorithms-sma-5503-fall-2005/video-lectures/lecture-15-dynamic-programming-longest-common-subsequence/">here</a>  . I must confess he explains it pretty well in this video . You may also  visit the corresponding <a title="a" href="http://en.wikipedia.org/wiki/Longest_common_subsequence_problem">wiki article</a>  Its a pretty long article but they have mentioned everything  very neatly .</p>
+<p><strong>LCS Problem Statement</strong><em>:</em> Given two sequences, find the length of longest subsequence present in both of them. A subsequence is a sequence that appears in the same relative order, but not necessarily contiguous. For example, “abc”, “abg”, “bdf”, “aeg”, ‘”acefg”, .. etc are subsequences of “abcdefg”. So a string of length n has 2^n different possible subsequences.</p>
+<p><strong>Examples:</strong><br />
+LCS for input Sequences “ABCDGH” and “AEDFHR” is “ADH” of length 3.<br />
+LCS for input Sequences “AGGTAB” and “GXTXAYB” is “GTAB” of length 4.</p>
+<p>Still not clear with the problem formulation / algo ?? look at the animations <a title="x" href="http://wordaligned.org/articles/longest-common-subsequence">here</a>.</p>
+<p><a title="f" href="http://ideone.com/4Mtc2">Here</a>  is a code of mine that finds the LCS of two strings given as input .</p>
+<p><span style="text-decoration:underline;"><strong>Recursive code:</strong></span></p>
+<p>[sourcecode language="cpp"]</p>
+<p>int max(int a,int b)<br />
+{<br />
+       if(a&lt;b)return b;<br />
+       return a;<br />
+}<br />
+int recursive_lcs_length(char * x, char * y)<br />
+{<br />
+	if (*x == '&#092;&#048;' || *y == '&#092;&#048;') return 0;<br />
+	else if (*x == *y) return 1 + recursive_lcs_length(x+1, y+1);<br />
+	else return max(recursive_lcs_length(x+1,y), recursive_lcs_length(x,y+1));<br />
+}<br />
+[/sourcecode]</p>
+<p>Recursive code takes O(2^n) time in the worst case- the two strings have no matching characters, so the last line is always executed. Its very inefficient. Lets now see the DP code.</p>
+<p><span style="text-decoration:underline;"><strong>Dynamic Programming Code (Bottom-up):</strong></span></p>
+<p>[sourcecode language="cpp"]<br />
+#include &lt;stdio.h&gt;<br />
+#include &lt;string.h&gt;<br />
+#define MAX 100<br />
+char X[MAX],Y[MAX];<br />
+int i,j,m,n,c[MAX][MAX],b[MAX][MAX];</p>
+<p>int LCSlength()</p>
+<p>{<br />
+           m=strlen(X);<br />
+           n=strlen(Y);<br />
+           for (i=1;i&lt;=m;i++) c[i][0]=0;<br />
+           for (j=0;j&lt;=n;j++) c[0][j]=0;<br />
+           for (i=1;i&lt;=m;i++)<br />
+           for (j=1;j&lt;=n;j++) {<br />
+                         if (X[i-1]==Y[j-1]) {<br />
+                                  c[i][j]=c[i-1][j-1]+1;<br />
+                                  b[i][j]=1;<br />
+                         }<br />
+                        else if (c[i-1][j]&gt;=c[i][j-1]) {<br />
+                                  c[i][j]=c[i-1][j];<br />
+                                  b[i][j]=2;<br />
+                       }<br />
+                       else {<br />
+                                  c[i][j]=c[i][j-1];<br />
+                                  b[i][j]=3;<br />
+                       }<br />
+          }<br />
+          return c[m][n];<br />
+}</p>
+<p>void printLCS(int i,int j)</p>
+<p>{<br />
+                  if (i==0 || j==0) return;<br />
+                  if (b[i][j]==1) {<br />
+                         printLCS(i-1,j-1);<br />
+                         printf(&quot;%c&quot;,X[i-1]);</p>
+<p>                 }<br />
+                 else if (b[i][j]==2)<br />
+                         printLCS(i-1,j);<br />
+                 else<br />
+                         printLCS(i,j-1);<br />
+}</p>
+<p>int main()</p>
+<p> {<br />
+                while (1) {<br />
+                            gets(X);<br />
+                            if (feof(stdin)) break;<br />
+                            gets(Y);<br />
+                            printf(&quot;LCS length -&gt; %d\n&quot;,LCSlength());<br />
+                            printLCS(m,n);<br />
+                            printf(&quot;\n&quot;);<br />
+               }<br />
+}<br />
+[/sourcecode]</p>
+<p>The DP code above moves bottom-up. It solves all the subproblems. Sometimes it may not be required to solve all the subproblems but only a few of them. This is what the memoization techenique does. Look at the code using memoization below:</p>
+<p><span style="text-decoration:underline;"><strong>Memoization Technique (Top-down):</strong></span></p>
+<p>[sourcecode language="cpp"]<br />
+int max(int a,int b)<br />
+{<br />
+    if(a&lt;b)return b;<br />
+    return a;<br />
+}</p>
+<p>int lcs_memo(char* x, int n, char* y,int m)<br />
+{<br />
+    int memo[n+1][m+1];<br />
+    int result=0;<br />
+    for(int i=0;i&lt;=n;i++)<br />
+         for(int j=0;j&lt;=m;j++)<br />
+            memo[i][j]=-1;</p>
+<p>    /*base cases*/<br />
+    if(m==0)return 0;<br />
+    if(n==0)return 0;</p>
+<p>    /*see if already calculated*/<br />
+    if(memo[n][m]!=-1) return memo[n][m];</p>
+<p>    /*if not calculated, calculate now*/<br />
+    if(x[n]==y[m])<br />
+           result=1+lcs_memo(x,n-1,y,m-1);<br />
+    else<br />
+           result=max(lcs_memo(x,n-1,y,m),lcs_memo(x,n,y,m-1));</p>
+<p>    /*save result*/<br />
+    memo[n][m]=result;</p>
+<p>    return result;<br />
+}</p>
+<p>[/sourcecode]</p>
+<p>The LCS code above (both DP and memoization techniques) takes O(n-square) time and O(n-square) space . It is possible to write a little more efficient code for LCS . The time complexity is the same (or probably a little higher in terms of bigger constants) but the space complexity can be reduced to be linear . Check the code <a href="http://www.ics.uci.edu/~eppstein/161/960229.html"> here</a> . Note that the LCS is not unique. If you want to find all the LCSs see the <a title="g" href="http://en.wikipedia.org/wiki/Longest_common_subsequence_problem#Reading_out_all_LCSs">pseudocode at wiki</a>. Lastly, lcs can also be found using the <a title="b" href="http://shiv4289.wordpress.com/2012/03/05/edit-distance-implementation/">edit distance algo</a> by making the cost of replacement greater than that of an insertion plus a deletion.</p>
+<p><span style="text-decoration:underline;"><strong>LONGEST INCREASING SUBSEQUENCE</strong></span></p>
+<p>LIS, I would say , is a cousin of LCS  It stands for   <strong>Longest increasing subsequence. </strong> The problem statement is as follows:</p>
+<p><em><strong>Given a sequence <img src="http://www.algorithmist.com/images/math/c/9/4/c94ba91451b1c20bd0193daf0306e93d.png" alt="a_1, a_2, \ldots, a_n" />, find the largest subset such that for every i &lt; j, a<sub>i</sub> &lt; a<sub>j</sub>.</strong></em></p>
+<p><a title="x" href="http://en.wikipedia.org/wiki/Longest_increasing_subsequence">This</a> wiki article explains the problem statement  pretty nicely<strong>. </strong>An interesting way of finding the LIS is to <em><strong>use the LCS algorithm</strong></em>.</p>
+<ol>
+<li>Make a sorted copy of the given sequence (say <em>A)</em>, denoted as <em>B</em>. This would take <em>O</em>(<em>n</em>log(<em>n</em>)) time.</li>
+<li>Use LCS on <em>A</em> and <em>B which takes</em> <em>O</em>(<em>n</em><sup>2</sup>) time.</li>
+</ol>
+<p>Alternatively you may solve LIS without using the LCS algo , The straight-forward DP approach is explained nicely by the <a title="v" href="http://www.algorithmist.com/index.php/Longest_Increasing_Subsequence#Dynamic_Programming">algorithmist</a> . The LIS problem comes in two different flavours :</p>
+<ol>
+<li>Find the length of LIS ,</li>
+<li>print the LIS .</li>
+</ol>
+<p>If you need only the length  its the easy part . The second part is a little trickier . Also ,the LIS implementation can be done in O(n-square) or 0(n log n ) time .Here is an <strong><em>O(n log n) code to find the length of LIS</em></strong>.</p>
+<p>[sourcecode language="cpp"]<br />
+#include&lt;iostream&gt;<br />
+#include&lt;set&gt;<br />
+#include&lt;vector&gt;<br />
+using namespace std;</p>
+<p>int LIS(vector&lt;int&gt; A)<br />
+{<br />
+    int N = A.size(),i;<br />
+    set&lt;int&gt; s;<br />
+    set&lt;int&gt;::iterator k;<br />
+    for (i=0;i&lt;N;i++)<br />
+    {<br />
+        if (s.insert(A[i]).second)<br />
+        {<br />
+           k = s.find(A[i]);<br />
+           k++;<br />
+           if (k!=s.end())<br />
+              s.erase(k);<br />
+        }<br />
+    }<br />
+    return s.size();<br />
+}<br />
+[/sourcecode]</p>
+<p>The above code runs in O(n log k) time where k is the length of the LIS found . To  <em><strong>get the LIS itself</strong></em> ,  we need to maintain a previous array which stores the index of the previous element in the LIS. Here’s a C++ implementation. It returns the LIS as an array.</p>
+<p>[sourcecode language="cpp"]<br />
+#include&lt;iostream&gt;<br />
+#include&lt;map&gt;<br />
+#include&lt;vector&gt;<br />
+using namespace std;</p>
+<p>typedef pair &lt; int , int &gt; PI;</p>
+<p>vector&lt;int&gt; LIS(vector&lt;int&gt; A)<br />
+{<br />
+    int N = A.size(),i,j=-1,t;<br />
+    vector&lt;int&gt; pre(N,-1),res;<br />
+    map&lt;int,int&gt; m;<br />
+    map&lt;int,int&gt;::iterator k,l;<br />
+    for (i=0;i&lt;N;i++)<br />
+    {<br />
+        if (m.insert(PI(A[i],i)).second)<br />
+        {<br />
+           k = m.find(A[i]);<br />
+           l = k;<br />
+           k++;<br />
+           if (l==m.begin())<br />
+                  pre[i]=-1;<br />
+           else<br />
+           {<br />
+               l--;<br />
+               pre[i]=l-&gt;second;<br />
+           }<br />
+           if (k!=m.end())<br />
+              m.erase(k);<br />
+        }<br />
+    }<br />
+    k=m.end();<br />
+    k--;<br />
+    j = k-&gt;second;<br />
+    while (j!=-1)<br />
+    {<br />
+          res.push_back(A[j]);<br />
+          j = pre[j];<br />
+    }<br />
+    reverse (res.begin(),res.end());<br />
+    return res;<br />
+}<br />
+[/sourcecode]</p>
+<p>If you are not very familiar with STL (in C++) , you may go for the O(n-square) solution . <a title="f" href="http://ideone.com/neFKP">Here</a> is a<em><strong> C code</strong></em> I generally use .</p>
+<p>[sourcecode language="cpp"]<br />
+#include&lt;stdio.h&gt;<br />
+#include&lt;string.h&gt;<br />
+void lis(int str[],int n)<br />
+{<br />
+        int len[n],prev[n],i,j,max=-1,k,b[n],a=0;<br />
+        for(i=0;i&lt;n;i++){<br />
+                len[i]=1;<br />
+                prev[i]=-1;<br />
+        }<br />
+        for(i=1;i&lt;n;i++)<br />
+        for(j=0;j&lt;i;j++){<br />
+                if(str[i]&gt;str[j]&amp;&amp; len[i]&lt;(len[j]+1)){<br />
+                        len[i]=len[j]+1;<br />
+                        prev[i]=j;</p>
+<p>                }<br />
+        }<br />
+        for(i=0;i&lt;n;i++)<br />
+                if(len[i]&gt;max)<br />
+                {       max=len[i]; k=i;}<br />
+        b[a]=str[k];<br />
+        for(i=prev[k];i&gt;=0;i=prev[k])<br />
+                {b[++a]=str[i];k=i;}<br />
+        for(i=max-1;i&gt;=0;i--)<br />
+                printf(&quot;%d &quot;,b[i]);<br />
+}<br />
+main()<br />
+{<br />
+    int str[]={5,9,4};<br />
+    lis(str,sizeof(str)/4);<br />
+    return 0;<br />
+}</p>
+<p>[/sourcecode]</p>
+<p>Play with my codes if you dont understand it  . Try different inputs .  If you  still dont get it , feel free to drop a comment .</p>
+<p><span style="text-decoration:underline;"><strong>References:</strong></span></p>
+<ol>
+<li>I came to know of the the LIS codes (O(n log n) versions)  presented above from <a title="v" href="http://comeoncodeon.wordpress.com/2009/08/12/longest-increasing-subsequence-lis/">here</a> .</li>
+<li>Art of programming (viz - no. 2 <a title="c" href="http://shiv4289.wordpress.com/references/">here</a>).</li>
+<li><a title="t" href="http://www.geeksforgeeks.org/archives/12998">geeksforgeeks.org</a> article for LCS</li>
+<li><a href="http://www.ics.uci.edu/~eppstein/161/960229.html">http://www.ics.uci.edu/~eppstein/161/960229.html</a></li>
+</ol>

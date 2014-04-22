@@ -1,0 +1,53 @@
+---
+layout: post
+title: Implementing printf() in C
+categories: []
+tags: []
+status: draft
+type: post
+published: false
+meta: {}
+author: 
+---
+<p>Lets implement our own version of printf() . We will use the power of C to allow a function that can accept variable number of arguments. If you are not sure how that works, have a look at  my <a title="C/C++ – Variable number of arguments to a function" href="http://shiv4289.wordpress.com/2013/05/18/cc-variable-number-of-arguments-to-a-function/">previous post</a>. We will implement a minimal version of printf(), the focus being how it processes a variable-length argument list and various format specifiers.</p>
+<p>This section contains an implementation of a minimal version of printf, to show how to write a function that processes a variable-length argument list in a portable way. Since we are mainly interested in the argument processing, minprintf will process the format string and arguments but will call the real printf to do the format conversions.<br />
+The proper declaration for printf is</p>
+<p>int printf(char *fmt, ...)<br />
+where the declaration ... means that the number and types of these arguments may vary. The declaration ... can only appear at the end of an argument list. Our minprintf is declared as<br />
+void minprintf(char *fmt, ...)<br />
+since we will not return the character count that printf does. The tricky bit is how minprintf walks along the argument list when the list doesnt' even have a name. The standard header &lt;stdarg.h&gt; contains a set of macro definitions that define how to step through an argument list. The implementation of this header will vary from machine to machine, but the interface it presents is uniform. The type va_list is used to declare a variable that will refer to each argument in turn; in minprintf, this variable is called ap, for `argument pointer.'The macro va_start initializes  ap to point to the first unnamed argument. It must be called once before ap is used. There must be at least one named argument; the final named argument is used by va_start to get started.<br />
+Each call of va_arg returns one argument and steps ap to the next; va_arg uses a type name to determine what type to return and how big a step to take. Finally, va_end does whatever cleanup is necessary. It must be called before the program returns. These properties form the basis of our simplified printf:</p>
+<p>#include &lt;stdarg.h&gt;<br />
+/* minprintf: minimal printf with variable argument list */<br />
+void minprintf(char *fmt, ...)<br />
+{<br />
+va_list ap; /* points to each unnamed arg in turn */<br />
+char *p, *sval;<br />
+int ival;<br />
+double dval;</p>
+<p>va_start(ap, fmt); /* make ap point to 1st unnamed arg */<br />
+for (p = fmt; *p; p++) {<br />
+if (*p != '%') {<br />
+putchar(*p);<br />
+continue;<br />
+}<br />
+switch (*++p) {<br />
+case 'd':<br />
+ival = va_arg(ap, int);<br />
+printf("%d", ival);<br />
+break;<br />
+case 'f':<br />
+dval = va_arg(ap, double);<br />
+printf("%f", dval);<br />
+break;<br />
+case 's':<br />
+for (sval = va_arg(ap, char *); *sval; sval++)<br />
+putchar(*sval);<br />
+break;<br />
+default:<br />
+putchar(*p);<br />
+break;<br />
+}<br />
+}<br />
+va_end(ap); /* clean up when done */<br />
+}</p>
