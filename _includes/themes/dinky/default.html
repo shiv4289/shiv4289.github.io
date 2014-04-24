@@ -40,19 +40,25 @@
         {% endif %}
         {% if site.author %}
         <div class="misc vcard">
-          <h4>about</h4>
-          <ul>
-            {% if site.author.email %}
-            <li class="contact"><address><span class="author fn n">{{ site.author.name }}</span> - <span class="fn email">{{ site.author.email }}</span></address></li>
+          <h4 style="color:white;">About</h4>
+            {% if site.author.linkedin %}
+            <li class="linkedin"><a href="http://www.linkedin.com/in/{{ site.author.linkedin }}/" rel="me">linkedin</a></li>
+            {% endif %}
+            {% if site.author.slideshare %}
+            <li class="slideshare"><a href="http://www.slideshare.net/{{ site.author.slideshare }}/" rel="me">slideshare</a></li>
             {% endif %}
             {% if site.author.github %}
-            <li class="github"><a href="http://github.com/{{ site.author.github }}/" rel="me">github.com/{{ site.author.github }}</a></li>
+            <li class="github"><a href="http://github.com/{{ site.author.github }}/" rel="me">github</a></li>
+            {% endif %}
+          <h4 style="color:white;">Get in touch</h4>
+            {% if site.author.email %}
+            <li class="contact"><address><span class="author fn n"></span> <span class="fn email">{{ site.author.email }}</span></address></li>
             {% endif %}
             {% if site.author.twitter %}
-            <li class="twitter"><a href="http://twitter.com/{{ site.author.twitter }}/" rel="me">twitter.com/{{ site.author.twitter }}</a></li>
+            <li class="twitter"><a href="http://twitter.com/{{ site.author.twitter }}/" rel="me">twitter</a></li>
             {% endif %}
             {% if site.author.facebook %}
-            <li class="facebook"><a href="http://facebook.com/{{ site.author.facebook }}/" rel="me">facebook.com/{{ site.author.facebook }}</a></li>
+            <li class="facebook"><a href="http://facebook.com/{{ site.author.facebook }}/" rel="me">facebook</a></li>
             {% endif %}
             {% if site.author.flickr %}
             <li class="flickr"><a href="http://flickr.com/{{ site.author.flickr }}/" rel="me">flickr.com/{{ site.author.flickr }}</a></li>
@@ -73,7 +79,7 @@
       </section>
 
       <footer>
-      <p><small>Hosted on <a href="http://pages.github.com/">GitHub Pages</a> using the <a href="https://github.com/sodabrew/theme-dinky">Dinky theme</a> for <a href="http://jekyllbootstrap.com/">Jekyll Bootstrap</a></small></p>
+      <p><small>Hosted on <a href="http://pages.github.com/">GitHub Pages</a> for <a href="http://jekyllbootstrap.com/">Jekyll Bootstrap</a></small></p>
       </footer>
     </div>
     <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->

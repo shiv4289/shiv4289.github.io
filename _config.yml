@@ -9,12 +9,15 @@ pygments: true
 # so be sure to set them if your theme uses them.
 #
 title : Shivji Kumar Jha
-tagline: Dream, Discover, Deploy!
+#tagline: Dream, Discover, Deploy!
 author :
   name : Shivji Jha
+  linkedin : shivjijha
+  slideshare : shiv4289
   email : shiv4289@gmail.com
   github : shiv4289
   twitter : ShivjiJha
+  facebook : shiv.kumarjha1
   feedburner : feedname
 
 # The production_url is only used when full-domain names are needed
@@ -82,7 +85,7 @@ JB :
   comments :
     provider : disqus
     disqus :
-      short_name : shivjikumarjha
+      short_name : httpshivjijhacom
     livefyre :
       site_id : 123
     intensedebate :
