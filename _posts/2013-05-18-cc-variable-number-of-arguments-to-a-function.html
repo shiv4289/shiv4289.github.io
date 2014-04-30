@@ -29,17 +29,19 @@ meta:
 author: 
 ---
 <p>Ever wondered how printf() in C would be implemented ? If you are a C-lover, I guess you would have, for its a function that looks pretty different from the other library functions, consumes tons of options and its very powerful. If you are not a C-fan and do not know much of it, you may want to have a look <a title="printf article on cplusplus.com" href="http://www.cplusplus.com/reference/cstdio/printf/">here</a> . Well, one of the great flexibility of printf() comes from the fact that it can consume variable number of arguments. If you are scratching your head about how it does that, hold on,  you will know it in a minute. That is what this post aims at :) . Lets look at some examples to understand what 'variable number of arguments' means.</p>
-<p>[sourcecode language="c"]</p>
-<p>#include&lt;stdio.h&gt;<br />
-int main()<br />
-{<br />
-   char * string = &quot;with&quot;;<br />
-   printf(&quot;printf with 1 arguement\n&quot;);<br />
-   printf(&quot;Printf with %d arguements\n&quot;, 2);<br />
-   printf(&quot;Printf %s %d arguements&quot;, string, 3);<br />
-   return 0;<br />
-}<br />
-[/sourcecode]</p>
+
+{% highlight c %}
+#include<stdio.h>
+int main()
+{
+   char * string = "with";
+   printf("printf with 1 arguement\n");
+   printf("Printf with %d arguements\n", 2);
+   printf("Printf %s %d arguements", string, 3);
+   return 0;
+}
+{% endhighlight %}
+
 <p>Note that the first version takes one argument, the second version takes two arguments and the third takes three. Have you ever written a function definition in C that can be invoked with any number of arguements 1...N ? If not, lets write one. But on the way we need to learn a couple of things as ingredients to it. We need to know of four simple things. The definitions have been taken from <a title="2" href="http://www.cplusplus.com/reference/cstdarg/va_list/?kw=va_list">cplusplus.com</a>. If you dont understand what they mean, you may first want to see how they are used ( see the code below) and believe me, its very simple to understand them from the usage.</p>
 <ol>
 <li>va_list:  Type to hold information about variable arguments.<br />
@@ -65,47 +67,59 @@ int main()<br />
 <li><span style="font-family:Consolas, Monaco, monospace;font-size:12px;line-height:18px;">int vsprintf (char * s, const char * format, va_list ap ); - </span><span style="font-family:Consolas, Monaco, monospace;font-size:12px;line-height:18px;">Writes formatted data from variable argument list to string <strong>s</strong>.</span></li>
 </ol>
 <p>Lets look at an example that uses the a va_arg(). For the above mentioned printf versions, you can find a C program for each of the 3 functions listed above in the links in the "References" section  (#2, #3, #4 respectively) at the end of this post.</p>
-<p>[sourcecode language="c"]<br />
-#include&lt;stdio.h&gt;<br />
-#include &lt;stdarg.h&gt;</p>
-<p>/* The sum() function can accept variable number of arguments.<br />
-   In the function declaration ... means that the number and<br />
-   type of the arguments may vary. The marker ... can only<br />
-   appear at the end.<br />
-*/<br />
-int sum(int num_of_arguments, ... )<br />
-{<br />
-  /* A list to store the aruements. In example, this may contain<br />
-    1,2,3 and 4 elements on successive calls from main()<br />
-  */<br />
-  va_list args;<br />
-  int sum= 0, i;</p>
-<p>  /* Directing the va_list args initialized above to start storing<br />
-     all parameters folloowing the first parameter 'num_of_arguments'<br />
-  */<br />
-  va_start (args, num_of_arguments );</p>
-<p>  /* Loop until all parameters are seen. */<br />
-  for (i= 0; i&lt; num_of_arguments; i++ )<br />
-  /* Extract the next value in argument list and add it to sum. */<br />
-  sum += va_arg (args,int);</p>
-<p>  /* Signal that we are done with our usage of the list */<br />
-  va_end (args);</p>
-<p>  return sum;  /* Returns the calculated sum.*/<br />
-}<br />
-int main()<br />
-{<br />
-  int result;</p>
-<p>  result=sum (1,1);<br />
-  printf(&quot;result of sum() with 2 arguement: %d \n&quot;, result);</p>
-<p>  result=sum (2,1,2);<br />
-  printf(&quot;result of sum() with 3 arguement: %d \n&quot;, result);</p>
-<p>  result=sum (3,1,2,3);<br />
-  printf(&quot;result of sum() with 4 arguement: %d \n&quot;, result);</p>
-<p>  result=sum (4,1,2,3,4);<br />
-  printf(&quot;result of sum() with 5 arguement: %d \n&quot;, result);</p>
-<p>  return 0;<br />
-}<br />
-[/sourcecode]</p>
+
+{% highlight c %}
+#include<stdio.h>
+#include <stdarg.h>
+ 
+/* The sum() function can accept variable number of arguments.
+   In the function declaration ... means that the number and
+   type of the arguments may vary. The marker ... can only
+   appear at the end.
+*/
+int sum(int num_of_arguments, ... )
+{
+  /* A list to store the aruements. In example, this may contain
+    1,2,3 and 4 elements on successive calls from main()
+  */
+  va_list args;
+  int sum= 0, i;
+ 
+  /* Directing the va_list args initialized above to start storing
+     all parameters folloowing the first parameter 'num_of_arguments'
+  */
+  va_start (args, num_of_arguments );
+ 
+  /* Loop until all parameters are seen. */
+  for (i= 0; i< num_of_arguments; i++ )
+  /* Extract the next value in argument list and add it to sum. */
+  sum += va_arg (args,int);
+ 
+  /* Signal that we are done with our usage of the list */
+  va_end (args);
+ 
+  return sum;  /* Returns the calculated sum.*/
+}
+int main()
+{
+  int result;
+ 
+  result=sum (1,1);
+  printf("result of sum() with 2 arguement: %d \n", result);
+ 
+  result=sum (2,1,2);
+  printf("result of sum() with 3 arguement: %d \n", result);
+ 
+  result=sum (3,1,2,3);
+  printf("result of sum() with 4 arguement: %d \n", result);
+ 
+  result=sum (4,1,2,3,4);
+  printf("result of sum() with 5 arguement: %d \n", result);
+ 
+  return 0;
+}
+{% endhighlight %}
+
 <p>Time to see what the function outputs. Here you go:</p>
 <pre>result of sum() with 2 arguement: 1 
 result of sum() with 3 arguement: 3 
