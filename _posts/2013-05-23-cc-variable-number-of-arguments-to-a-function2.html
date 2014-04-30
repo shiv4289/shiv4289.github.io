@@ -39,51 +39,65 @@ va_end(dest);</p>
 Note that the compiler wont complain about the wrongdoings in the methods discusses above. The compilation and linking will all pass fine, only when you see the outputs they will appear weird.  The good news is, you can always use <strong>va_copy</strong>() function to get a replica of a va_list object at that instant of time. So, if you want to use the variable argument list a second time, just use this function. The prototype is:</p>
 <pre><span style="font-family:Georgia, 'Times New Roman', 'Bitstream Charter', Times, serif;font-size:13px;line-height:19px;">void va_copy (va_list destination, va_list source);</span></pre>
 <p>Just remember that each invocation of va_copy() must be matched by a corresponding invocation of va_end() in the same function. Lets now look at a small code to see va_copy() in action.</p>
-<p>[sourcecode language="cpp"]</p>
-<p>#include&lt;stdio.h&gt;<br />
-#include &lt;stdarg.h&gt;</p>
-<p>/* The sum() function can accept variable number of arguments.<br />
-   In the function declaration &quot;...&quot; at the end means that the<br />
-   number and  type of the arguments may vary. The marker ... can<br />
-   only appear at the end.<br />
-*/<br />
-int sum(int num_of_arguments, ... )<br />
-{<br />
-   /* A list to store the aruements. In example, this may contain<br />
-      1,2,3 and 4 elements on successive calls from main()<br />
-   */<br />
-   va_list args;<br />
-   int sum= 0, i;</p>
-<p>   /* Directing the va_list args initialized above to start storing<br />
-      all parameters folloowing the first parameter 'num_of_arguments'<br />
-   */<br />
-   va_start (args, num_of_arguments );</p>
-<p>   va_list args_copy; //initialize a copy of va_list to be used<br />
-   va_copy(args_copy, args); //copy args to args_copy</p>
-<p>   for (i= 0; i&lt; num_of_arguments; i++ )<br />
-   /* We add 5 to each element in variable argument list and<br />
-      print it.<br />
-   */<br />
-   printf(&quot;%d &quot;, va_arg (args_copy, int) + 5);</p>
-<p>   va_end(args_copy); //destruct args_copy</p>
-<p>   printf(&quot;\n&quot;);</p>
-<p>   /**** Next, we use args as in previous post ****/</p>
-<p>   /* Loop until all parameters are seen. */<br />
-   for (i= 0; i&lt; num_of_arguments; i++ )<br />
-     /* Extract the next value in argument list and add it to sum. */<br />
-     sum += va_arg (args,int);</p>
-<p>   /* Signal that we are done with our usage of the list */<br />
-   va_end (args);</p>
-<p>   return sum; /* Returns the calculated sum.*/<br />
-}<br />
-int main()<br />
-{<br />
-   int result;</p>
-<p>   result=sum (4,1,2,3,4);<br />
-   printf(&quot;result of sum() with 5 arguement: %d \n&quot;, result);</p>
-<p>   return 0;<br />
-}</p>
-<p>[/sourcecode]</p>
+
+{% highlight c++ %}
+#include<stdio.h>
+#include <stdarg.h>
+ 
+/* The sum() function can accept variable number of arguments.
+   In the function declaration "..." at the end means that the
+   number and  type of the arguments may vary. The marker ... can
+   only appear at the end.
+*/
+int sum(int num_of_arguments, ... )
+{
+   /* A list to store the aruements. In example, this may contain
+      1,2,3 and 4 elements on successive calls from main()
+   */
+   va_list args;
+   int sum= 0, i;
+ 
+   /* Directing the va_list args initialized above to start storing
+      all parameters folloowing the first parameter 'num_of_arguments'
+   */
+   va_start (args, num_of_arguments );
+ 
+   va_list args_copy; //initialize a copy of va_list to be used
+   va_copy(args_copy, args); //copy args to args_copy
+ 
+   for (i= 0; i< num_of_arguments; i++ )
+   /* We add 5 to each element in variable argument list and
+      print it.
+   */
+   printf("%d ", va_arg (args_copy, int) + 5);
+ 
+   va_end(args_copy); //destruct args_copy
+ 
+   printf("\n");
+ 
+   /**** Next, we use args as in previous post ****/
+ 
+   /* Loop until all parameters are seen. */
+   for (i= 0; i< num_of_arguments; i++ )
+     /* Extract the next value in argument list and add it to sum. */
+     sum += va_arg (args,int);
+ 
+   /* Signal that we are done with our usage of the list */
+   va_end (args);
+ 
+   return sum; /* Returns the calculated sum.*/
+}
+int main()
+{
+   int result;
+ 
+   result=sum (4,1,2,3,4);
+   printf("result of sum() with 5 arguement: %d \n", result);
+ 
+   return 0;
+}
+{% endhighlight %}
+
 <p>Play with the <a href="http://ideone.com/vmP9Ab">above code on ideone</a>. Change a few things here and there and see how it works.</p>
 <p>Happy coding !!!</p>
 <p>References:</p>
