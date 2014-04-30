@@ -41,29 +41,32 @@ For the first case, the suffixes of the string are “ababaa”, “babaa”, �
 <p>For the second case, the answer is 2 + 1 = 3.</p>
 <p><span style="text-decoration:underline;"><strong>SOLUTION 1:</strong></span></p>
 <p>The most intuitive way (brute force)  to solve this problem is simple, take out every suffix of the given string and match it with the given string to find the number of matching characters.Now add all such numbers for every suffix and there you have it solved.</p>
-<p>[sourcecode language="cpp"]<br />
-#include &lt;string&gt;<br />
-#include &lt;iostream&gt;<br />
-#include &lt;algorithm&gt;<br />
-using namespace std;<br />
-long long similarity(string s, int k){<br />
-   long long i;<br />
-   for(i=0;k+i&lt;s.size();i++){<br />
-      if(s[i]!=s[k+i]) break;<br />
-   }<br />
-   return i;<br />
-}</p>
-<p>int main() {<br />
-   string s; long long sum;<br />
-   getline(cin,s);<br />
-   sum=s.size();<br />
-   for(long long i=1;i&lt;s.size();i++){<br />
-      sum+=similarity(s,i);<br />
-   }<br />
-   cout&lt;&lt;sum&lt;&lt;endl;<br />
-   return 0;<br />
-}</p>
-<p>[/sourcecode]</p>
+
+{% highlight c++ %}
+#include <string>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+long long similarity(string s, int k){
+   long long i;
+   for(i=0;k+i<s.size();i++){
+      if(s[i]!=s[k+i]) break;
+   }
+   return i;
+}
+ 
+int main() {
+   string s; long long sum;
+   getline(cin,s);
+   sum=s.size();
+   for(long long i=1;i<s.size();i++){
+      sum+=similarity(s,i);
+   }
+   cout<<sum<<endl;
+   return 0;
+}
+{% endhighlight %}
+
 <p>But this is costly as we are not using one result to calculate the next one.  So we are throwing away some valuable info and calculating things from scratch everytime. If you try the above solution, it will get you a TLE (time limit exceeded). To get this in time, we need to come up with a better algorithm. Lets discuss this better algorithm to solve this- the Z-algorithm.  The z-algorithm gives you a Z-array which is exactly what we need in this question to sum up and print the answer- The similarity of each suffix to the prefix. A tutorial for the z-algorithm can be found in video at:</p>
 <ol>
 <li><a href="http://www.youtube.com/watch?v=MFK0WYeVEag">http://www.youtube.com/watch?v=MFK0WYeVEag</a>   and</li>
@@ -72,47 +75,52 @@ long long similarity(string s, int k){<br />
 <p>The algorithm is explained quite nicely in these videos.</p>
 <p><span style="text-decoration:underline;"><strong>SOLUTION 2:</strong></span></p>
 <p><strong> </strong>Once you understand the z-algorithm, its easy to guess that the solution to this question is nothing but sum of all the z values. Lets see the code now:</p>
-<p>[sourcecode language="cpp"]</p>
-<p>#include &lt;string&gt;<br />
-#include &lt;cstdio&gt;<br />
-#include &lt;vector&gt;<br />
-#include &lt;iostream&gt;<br />
-#include &lt;algorithm&gt;<br />
-using namespace std;</p>
-<p>long long compute_z(string s){<br />
-   long long sum=0;<br />
-   int n = s.length();<br />
-   vector&lt;int&gt; z(n,0);</p>
-<p>   long long L = 0, R = 0;<br />
-   for (long long i = 1; i &lt; n; i++) {<br />
-      if (i &gt; R) {<br />
-         L = R = i;<br />
-         while (R &lt; n &amp;&amp; s[R-L] == s[R]) R++;<br />
-         z[i] = R-L; R--;<br />
-      }</p>
-<p>      else {</p>
-<p>         int k = i-L;<br />
-         if (z[k] &lt; R-i+1) z[i] = z[k];<br />
-         else {<br />
-            L = i;<br />
-            while (R &lt; n &amp;&amp; s[R-L] == s[R]) R++;<br />
-            z[i] = R-L; R--;<br />
-         }<br />
-      }<br />
-      sum+=z[i];<br />
-   }<br />
-   return sum;<br />
-}</p>
-<p>int main() {<br />
-  int t; string s; long long sum;<br />
-  cin&gt;&gt;t;getchar();<br />
-  while(t--){<br />
-    getline(cin,s);<br />
-    cout&lt;&lt;compute_z(s)+s.size()&lt;&lt;endl;<br />
-  }<br />
-  return 0;<br />
-}</p>
-<p>[/sourcecode]</p>
+{% highlight c++ %}
+#include <string>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+ 
+long long compute_z(string s){
+   long long sum=0;
+   int n = s.length();
+   vector<int> z(n,0);
+ 
+   long long L = 0, R = 0;
+   for (long long i = 1; i < n; i++) {
+      if (i > R) {
+         L = R = i;
+         while (R < n && s[R-L] == s[R]) R++;
+         z[i] = R-L; R--;
+      }
+ 
+      else {
+ 
+         int k = i-L;
+         if (z[k] < R-i+1) z[i] = z[k];
+         else {
+            L = i;
+            while (R < n && s[R-L] == s[R]) R++;
+            z[i] = R-L; R--;
+         }
+      }
+      sum+=z[i];
+   }
+   return sum;
+}
+ 
+int main() {
+  int t; string s; long long sum;
+  cin>>t;getchar();
+  while(t--){
+    getline(cin,s);
+    cout<<compute_z(s)+s.size()<<endl;
+  }
+  return 0;
+}
+{% endhighlight %}
 <p>And yes this code is accepted :)</p>
 <p>In case you didn't notice yet,</p>
 <ul>
