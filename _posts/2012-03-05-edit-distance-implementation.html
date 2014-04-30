@@ -47,119 +47,147 @@ author:
 </ul>
 <p><span style="text-decoration:underline;"><strong>Recursive Code:</strong></span></p>
 <p>Below is a recursive code to find the edit distance of two given strings. You may try different inputs on the <a href="http://ideone.com/W6sf5">ideone link for my recursive solution.</a></p>
-<p>[sourcecode language="cpp"]</p>
-<p>#include&lt;stdio.h&gt;<br />
-#include&lt;stdlib.h&gt;<br />
-#include&lt;string.h&gt;</p>
-<p>#define IC 1 /*cost to insert*/<br />
-#define RC 1 /*cost to replace*/<br />
-#define DC 1 /*cost to delete*/</p>
-<p>int minimum(int a, int b, int c)<br />
-{<br />
-    int min = c;</p>
-<p>    if( a &lt; b )<br />
-    {<br />
-        if( a &lt; c )<br />
-        {<br />
-            min = a;<br />
-        }<br />
-    }<br />
-    else<br />
-    {<br />
-        if( b &lt; c )<br />
-        {<br />
-            min = b;<br />
-        }<br />
-    }</p>
-<p>    return min;<br />
-}</p>
-<p>/*<br />
-     red- recursive edit distance</p>
-<p>*/<br />
-int red(char *x, char *y)<br />
-{<br />
-    int d,e,f;</p>
-<p>    /* Base cases */</p>
-<p>    if(*x==0)return strlen(y);<br />
-    if(*y== 0)return strlen(x);</p>
-<p>    /* Recurse */</p>
-<p>    if(*x==*y)<br />
-         d=red(x+1,y+1);<br />
-    else<br />
-         d=RC+red(x+1,y+1); /*replace*/<br />
-    e=IC+red(x,y+1); /*insert*/<br />
-    f=DC+red(x+1,y); /*delete*/</p>
-<p>    return minimum(d,e,f);<br />
-}</p>
-<p>int main()<br />
-{<br />
-    char source[]=&quot;kitten&quot;;<br />
-    char target[]=&quot;sitting&quot;;</p>
-<p>    printf(&quot;Minimum cost to convert %s into %s is %d\n&quot;,source,target,red(source,target));</p>
-<p>    return 0;<br />
-}<br />
-[/sourcecode]</p>
+
+{% highlight c++ %}
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+ 
+#define IC 1 /*cost to insert*/
+#define RC 1 /*cost to replace*/
+#define DC 1 /*cost to delete*/
+ 
+int minimum(int a, int b, int c)
+{
+    int min = c;
+ 
+    if( a < b )
+    {
+        if( a < c )
+        {
+            min = a;
+        }
+    }
+    else
+    {
+        if( b < c )
+        {
+            min = b;
+        }
+    }
+ 
+    return min;
+}
+ 
+/*
+     red- recursive edit distance
+ 
+*/
+int red(char *x, char *y)
+{
+    int d,e,f;
+ 
+    /* Base cases */
+ 
+    if(*x==0)return strlen(y);
+    if(*y== 0)return strlen(x);
+ 
+    /* Recurse */
+ 
+    if(*x==*y)
+         d=red(x+1,y+1);
+    else
+         d=RC+red(x+1,y+1); /*replace*/
+    e=IC+red(x,y+1); /*insert*/
+    f=DC+red(x+1,y); /*delete*/
+ 
+    return minimum(d,e,f);
+}
+ 
+int main()
+{
+    char source[]="kitten";
+    char target[]="sitting";
+ 
+    printf("Minimum cost to convert %s into %s is %d\n",source,target,red(source,target));
+ 
+    return 0;
+}
+{% endhighlight %}
+
 <p><span style="text-decoration:underline;"><strong>The DP solution:</strong></span></p>
 <p>Here is the <a title="b" href="http://ideone.com/kgsG1">idoene link for the DP code</a>. Play with it if you find the DP code difficult to understand !!</p>
-<p>[sourcecode language="cpp"]</p>
-<p>#include&lt;stdio.h&gt;<br />
-#include&lt;stdlib.h&gt;<br />
-#include&lt;string.h&gt;</p>
-<p>#define IC 1 /*cost to insert*/<br />
-#define RC 1 /*cost to replace*/<br />
-#define DC 1 /*cost to delete*/</p>
-<p>int minimum(int a, int b, int c)<br />
-{<br />
-    int min = c;</p>
-<p>    if( a &lt; b )<br />
-    {<br />
-        if( a &lt; c )<br />
-        {<br />
-            min = a;<br />
-        }<br />
-    }<br />
-    else<br />
-    {<br />
-        if( b &lt; c )<br />
-        {<br />
-            min = b;<br />
-        }<br />
-    }</p>
-<p>    return min;<br />
-}</p>
-<p>int edit_distance(char* s1, char* s2)<br />
-{<br />
-        int d;<br />
-        int m = strlen(s1);<br />
-        int n = strlen(s2);<br />
-        int dp[m+1][n+1];<br />
-        for (int i = 0; i &lt;= m; i++) {<br />
-                dp[i][0] = i;<br />
-        }<br />
-        for (int j = 0; j &lt;= n; j++) {<br />
-                dp[0][j] = j;<br />
-        }</p>
-<p>        for (int i = 1; i &lt;= m; i++) {<br />
-                for (int j = 1; j &lt;= n; j++) {<br />
-                        if (s1[i-1] == s2[j-1])<br />
-                             d = 0;<br />
-                        else<br />
-                             d = RC;<br />
-                        dp[i][j] = minimum(dp[i-1][j-1] + d,    /*replace*/<br />
-                                          dp[i-1][j]+IC,         /*insert*/<br />
-                                          dp[i][j-1]+DC);        /*delete*/<br />
-                }<br />
-        }</p>
-<p>        return dp[m][n];<br />
-}</p>
-<p>int main()<br />
-{<br />
-    char source[]=&quot;kitten&quot;;<br />
-    char target[]=&quot;sitting&quot;;</p>
-<p>    printf(&quot;Minimum cost to convert %s into %s is %d\n&quot;,source,target,edit_distance(source,target));</p>
-<p>    return 0;<br />
-}</p>
-<p>[/sourcecode]</p>
+
+{% highlight c++ %}
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+ 
+#define IC 1 /*cost to insert*/
+#define RC 1 /*cost to replace*/
+#define DC 1 /*cost to delete*/
+ 
+int minimum(int a, int b, int c)
+{
+    int min = c;
+ 
+    if( a < b )
+    {
+        if( a < c )
+        {
+            min = a;
+        }
+    }
+    else
+    {
+        if( b < c )
+        {
+            min = b;
+        }
+    }
+ 
+    return min;
+}
+ 
+int edit_distance(char* s1, char* s2)
+{
+        int d;
+        int m = strlen(s1);
+        int n = strlen(s2);
+        int dp[m+1][n+1];
+        for (int i = 0; i <= m; i++) {
+                dp[i][0] = i;
+        }
+        for (int j = 0; j <= n; j++) {
+                dp[0][j] = j;
+        }
+ 
+        for (int i = 1; i <= m; i++) {
+                for (int j = 1; j <= n; j++) {
+                        if (s1[i-1] == s2[j-1])
+                             d = 0;
+                        else
+                             d = RC;
+                        dp[i][j] = minimum(dp[i-1][j-1] + d,    /*replace*/
+                                          dp[i-1][j]+IC,         /*insert*/
+                                          dp[i][j-1]+DC);        /*delete*/
+                }
+        }
+ 
+        return dp[m][n];
+}
+ 
+int main()
+{
+    char source[]="kitten";
+    char target[]="sitting";
+ 
+    printf("Minimum cost to convert %s into %s is %d\n",source,target,edit_distance(source,target));
+ 
+    return 0;
+}
+{% endhighlight %}
+
 <p>Try understanding how the DP matrix will look like. For the above <a title="t" href="http://en.wikipedia.org/wiki/Levenshtein_distance">wiki</a> example, here is the DP matrix:</p>
 <table class="aligncenter">
 <tbody>
