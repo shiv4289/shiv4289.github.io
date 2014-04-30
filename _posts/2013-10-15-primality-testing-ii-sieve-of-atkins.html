@@ -71,37 +71,45 @@ print 2, 3
 for n in [5, limit]:
     if is_prime(n): print n</pre>
 <p>And finally lets convert this easy to understand algorithm into a python code:</p>
-<p>[sourcecode language="Python"]<br />
-#!/usr/bin/python2.7 -tt</p>
-<p>import sys<br />
-from math import sqrt, ceil, pow</p>
-<p>def primes_below(limit): #sieve of Atkins<br />
-  sqroot= int(ceil(sqrt(limit)))<br />
-  is_prime=[False]*limit<br />
-  primes = [2,3]</p>
-<p>  for x in xrange(sqroot+1):<br />
-    for y in xrange(sqroot+1):<br />
-      # n = 4*i^2 + j^2<br />
-      n = 4*int(pow(x, 2)) + int(pow(y,2))<br />
-      if n &lt;= limit and (n % 12 == 1 or n % 12 == 5):<br />
-        is_prime[n]= not is_prime[n]<br />
-      # n = 3*i^2 + j^2<br />
-      n = 3*int(pow(x, 2)) + int(pow(y,2))<br />
-      if n &lt;= limit and n % 12 == 7:<br />
-        is_prime[n]= not is_prime[n]<br />
-      # n = 3*i^2 - j^2<br />
-      n = 3*int(pow(x, 2)) - int(pow(y,2))<br />
-      if n &lt;= limit and x &gt; y and n % 12 == 11:<br />
-        is_prime[n]= not is_prime[n]</p>
-<p>  for x in range(5, limit, 2):<br />
-    if(is_prime[x] == True):<br />
-      for y in xrange(x*x, limit, x):<br />
-        is_prime[y]= False<br />
-      primes.append(x);<br />
-  print primes</p>
-<p>def main():<br />
-  primes_below(100)</p>
-<p>if __name__=='__main__':<br />
-  main()<br />
-[/sourcecode]</p>
+
+{% highlight python %}
+#!/usr/bin/python2.7 -tt
+ 
+import sys
+from math import sqrt, ceil, pow
+ 
+def primes_below(limit): #sieve of Atkins
+  sqroot= int(ceil(sqrt(limit)))
+  is_prime=[False]*limit
+  primes = [2,3]
+ 
+  for x in xrange(sqroot+1):
+    for y in xrange(sqroot+1):
+      # n = 4*i^2 + j^2
+      n = 4*int(pow(x, 2)) + int(pow(y,2))
+      if n <= limit and (n % 12 == 1 or n % 12 == 5):
+        is_prime[n]= not is_prime[n]
+      # n = 3*i^2 + j^2
+      n = 3*int(pow(x, 2)) + int(pow(y,2))
+      if n <= limit and n % 12 == 7:
+        is_prime[n]= not is_prime[n]
+      # n = 3*i^2 - j^2
+      n = 3*int(pow(x, 2)) - int(pow(y,2))
+      if n <= limit and x > y and n % 12 == 11:
+        is_prime[n]= not is_prime[n]
+ 
+  for x in range(5, limit, 2):
+    if(is_prime[x] == True):
+      for y in xrange(x*x, limit, x):
+        is_prime[y]= False
+      primes.append(x);
+  print primes
+ 
+def main():
+  primes_below(100)
+ 
+if __name__=='__main__':
+  main()
+{% endhighlight %}
+
 <p>The C++ code for the algorithm can be found <a title="c code for sieve of Atkins" href="http://dl.dropboxusercontent.com/u/29023244/atkin.cpp" target="_blank">here</a>. Enjoy!</p>
