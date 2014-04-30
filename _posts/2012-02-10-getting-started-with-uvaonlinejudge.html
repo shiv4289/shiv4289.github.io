@@ -38,18 +38,22 @@ author:
 <li>Scroll down and you will get a hint to the problem .</li>
 </ul>
 <p>Alternatively ,  search google for  <strong>10071 - Back to High School Physics</strong> . Click on a link from the algorithmist's site . You will reach <a title="l" href="http://www.algorithmist.com/index.php/UVa_10071">here</a> . You could find some clues here too . But please try yourself before you go onto look at the hints using one of the two methods  because thats the whole motive behind starting with uva .  By now you are ready to dive into your compiler and code ,so do it !!! . You may also use <a href="http://www.ideone.com">ideone</a> .  Its a really good place to try different input/ outputs and check if your code is error-free . Let me post the solution for this question to show you a sample solution :</p>
-<p>[sourcecode language="cpp"]</p>
-<p>#include&lt;stdio.h&gt;<br />
-int main()<br />
-{</p>
-<p>     long int v,t,s;</p>
-<p>     while(scanf(&quot;%ld%ld&quot;,&amp;v,&amp;t)==2){</p>
-<p>          s=v*t*2;</p>
-<p>          printf(&quot;%d\n&quot;,s);</p>
-<p>    }<br />
-    return 0;<br />
-}<br />
-[/sourcecode]</p>
+
+{% highlight c++ %}
+#include<stdio.h>
+int main()
+{
+   long int v,t,s;
+
+   while(scanf("%ld%ld",&v,&t)==2){
+       s=v*t*2;
+       printf("%d\n",s);
+   }
+
+   return 0;
+}
+{% endhighlight %}
+
 <p>Log in to the uva website  . Go to <strong>Quick submit</strong> on the left . Enter question number on uva site (10007 here) , choose a language (click on C for above sample code) , copy-paste your code here (you may browse it as well :) ) and <strong>submit</strong> your code Congratulations !!!! you have now submitted a solution at the uva site (if you get AC- accepted) . You can check the status of your submission by selecting the “My Submissions” link on the left side of the page. The “Verdict” heading will tell you if it was solved or if there was a problem (<em>e.g.</em> wrong answer, ran too long, crashed, too much memory was used, compile error, etc).</p>
 <p>Now go ahead and solve some more problems  !!!</p>
 <p><strong> Next Problem to Solve</strong> :</p>
