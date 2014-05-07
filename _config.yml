@@ -1,6 +1,3 @@
-  # Changing the default Markdown interpreter from Maruku to Kramdown
-  markdown: redcarpet
-
 # This is the default format. 
 # For more see: http://jekyllrb.com/docs/permalinks/
 permalink: /:categories/:year/:month/:day/:title 
@@ -22,6 +19,10 @@ author :
   twitter : ShivjiJha
   facebook : shiv.kumarjha1
   feedburner : feedname
+  
+    # Changing the default Markdown interpreter from Maruku to Kramdown
+  markdown: redcarpet
+
 
 # The production_url is only used when full-domain names are needed
 # such as sitemap.txt 
