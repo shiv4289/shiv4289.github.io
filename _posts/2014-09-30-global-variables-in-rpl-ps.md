@@ -10,18 +10,18 @@ tags:
 - performance_schema
 ---
 
-At MySQL, replication usability is of utmost importance to us. Replication information has long been part of SHOW commands, [SHOW SLAVE STATUS] (http://dev.mysql.com/doc/refman/5.7/en/show-slave-status.html) occupying a major chunk of it. The other sources of replication information being
+At MySQL, replication usability is of utmost importance to us. Replication information has long been part of SHOW commands, [SHOW SLAVE STATUS](http://dev.mysql.com/doc/refman/5.7/en/show-slave-status.html) occupying a major chunk of it. The other sources of replication information being
 
-* [SHOW MASTER STATUS] (http://dev.mysql.com/doc/refman/5.7/en/show-master-status.html),
-* [SHOW BINLOG EVENTS] (http://dev.mysql.com/doc/refman/5.7/en/show-binlog-events.html),
-* [SHOW RELAYLOG EVENTS] (http://dev.mysql.com/doc/refman/5.7/en/show-relaylog-events.html),
-* [SHOW VARIABLES] (http://dev.mysql.com/doc/refman/5.7/en/show-variables.html),
-* [SHOW STATUS] (http://dev.mysql.com/doc/refman/5.7/en/show-status.html),
-* [ERROR LOGS] (http://dev.mysql.com/doc/refman/5.7/en/error-log.html) etc. 
+* [SHOW MASTER STATUS](http://dev.mysql.com/doc/refman/5.7/en/show-master-status.html),
+* [SHOW BINLOG EVENTS](http://dev.mysql.com/doc/refman/5.7/en/show-binlog-events.html),
+* [SHOW RELAYLOG EVENTS](http://dev.mysql.com/doc/refman/5.7/en/show-relaylog-events.html),
+* [SHOW VARIABLES](http://dev.mysql.com/doc/refman/5.7/en/show-variables.html),
+* [SHOW STATUS](http://dev.mysql.com/doc/refman/5.7/en/show-status.html),
+* [ERROR LOGS](http://dev.mysql.com/doc/refman/5.7/en/error-log.html) etc. 
 
-As the replication module grows further, there is a lot more monitoring information, so much that the present interfaces seem too rigid to accommodate all the information we would like to present. So we need to organize them in a more structured manner. In MySQL-5.7.2, we [introduced replication performance\_schema (P_S) tables] (http://shivjijha.com/mysql/2013/09/22/MySQL-5.7:-Introducing-the-Performance-Schema-tables-to-monitor-Replication/) providing an SQL interface to monitor replication configuration and status partitioned into different tables, each table grouping logically related information. You can read more about the contents of these tables from [official MySQL documentation] (http://dev.mysql.com/doc/refman/5.7/en/performance-schema-replication-tables.html).
+As the replication module grows further, there is a lot more monitoring information, so much that the present interfaces seem too rigid to accommodate all the information we would like to present. So we need to organize them in a more structured manner. In MySQL-5.7.2, we [introduced replication performance\_schema (P_S) tables](http://shivjijha.com/mysql/2013/09/22/MySQL-5.7:-Introducing-the-Performance-Schema-tables-to-monitor-Replication/) providing an SQL interface to monitor replication configuration and status partitioned into different tables, each table grouping logically related information. You can read more about the contents of these tables from [official MySQL documentation](http://dev.mysql.com/doc/refman/5.7/en/performance-schema-replication-tables.html).
 
-In [MySQL-5.7.5] (https://dev.mysql.com/doc/relnotes/mysql/5.7/en/news-5-7-5.html) we added some more status variables to these performance\_schema tables to enable monitoring the latest replication features viz. [multi-source replication] (http://www.slideshare.net/shiv4289/my-sql-labs-multi-source-replication) in [labs] (http://labs.mysql.com/). Multi-source allows a MySQL slave to replicate from multiple sources (masters) directly. Talking of multi-source, one needs the replication information per source. So we added global variables that would be useful to extend to per-source scope to the replication performance\_schema tables to help monitor multi-source replication. Note that these variables still work for the single sourced replication and can still be accessed as:
+In [MySQL-5.7.5](https://dev.mysql.com/doc/relnotes/mysql/5.7/en/news-5-7-5.html) we added some more status variables to these performance\_schema tables to enable monitoring the latest replication features viz. [multi-source replication](http://www.slideshare.net/shiv4289/my-sql-labs-multi-source-replication) in [labs](http://labs.mysql.com/). Multi-source allows a MySQL slave to replicate from multiple sources (masters) directly. Talking of multi-source, one needs the replication information per source. So we added global variables that would be useful to extend to per-source scope to the replication performance\_schema tables to help monitor multi-source replication. Note that these variables still work for the single sourced replication and can still be accessed as:
 
     Show status like 'Slave_running';
     Show status like 'Slave_retried_transactions';
